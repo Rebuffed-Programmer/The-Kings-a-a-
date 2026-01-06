@@ -1002,5 +1002,107 @@
     };
 })();
 </script>
+<script>
+/**
+ * THE KINGS - VERSÃO FINAL COM BOTÃO NO TOPO
+ */
+(function() {
+    // 1. CSS PARA O BOTÃO NO TOPO E GRIDS
+    const estilo = document.createElement('style');
+    estilo.innerHTML = `
+        .flags-section { width: 95%; background: #333; padding: 10px; border-radius: 10px; margin-bottom: 10px; }
+        .flags-title { color: var(--cor-primaria); font-size: 1rem; margin-bottom: 8px; text-transform: uppercase; border-bottom: 1px solid #555; padding-bottom: 5px; }
+        .flags-grid { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+        .flag-card { width: 65px; height: 40px; background: white; border-radius: 5px; display: flex; align-items: center; justify-content: center; padding: 2px; }
+        .flag-card img { max-width: 90%; max-height: 90%; object-fit: contain; }
+        
+        /* BOTÃO DE FINALIZAR ESTILO BK (NO TOPO) */
+        .btn-finalizar-topo { 
+            background-color: #28a745 !important; 
+            color: white !important; 
+            width: 100%; 
+            max-width: 450px; 
+            padding: 20px !important;
+            font-size: 1.4rem !important;
+            font-weight: bold !important;
+            border-radius: 12px !important;
+            margin: 15px 0 !important;
+            box-shadow: 0px 4px 0px #1e7e34 !important;
+            text-transform: uppercase;
+        }
+
+        .btn-pix-logo { width: 45px; margin-bottom: 5px; }
+    `;
+    document.head.appendChild(estilo);
+
+    // 2. Colocar Logo no Botão Pix da tela de seleção de pagamento
+    const botoesPagamento = document.querySelectorAll('.btn-pay');
+    botoesPagamento.forEach(btn => {
+        if (btn.innerText.includes('Pix')) {
+            btn.innerHTML = `<img src="https://i.postimg.cc/rp2wY1F3/Pix.png" class="btn-pix-logo"><br>Pix`;
+            btn.style.display = "flex";
+            btn.style.flexDirection = "column";
+            btn.style.alignItems = "center";
+        }
+    });
+
+    // 3. Montar a tela de cartões com o BOTÃO NO TOPO
+    const telaCartao = document.getElementById('screen-card');
+    if (telaCartao) {
+        telaCartao.innerHTML = `
+            <img src="https://i.postimg.cc/C1nrB0SK/Logo.png" class="logo" style="width:100px;">
+            <h1 style="margin: 5px 0;">Cartões que aceitamos</h1>
+            
+            <button class="btn-finalizar-topo" onclick="finishOrder()">
+                FINALIZAR E PAGAR NO BALCÃO
+            </button>
+
+            <p style="color: #ccc; margin-bottom: 15px;">Confira as bandeiras aceitas abaixo:</p>
+
+            <div class="flags-section">
+                <div class="flags-title">Cartões Débito e Crédito</div>
+                <div class="flags-grid">
+                    <div class="flag-card"><img src="https://i.postimg.cc/0ywNfWx7/MasterCard.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/0ywNfWxc/Visa.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/GpnmSFhX/ELO.jpg"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/htdGrygy/American_express.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/dVy0BHvn/Hiper.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/XYCv8H3R/Hipercard.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/vmwZSrHX/Banri_Compras.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/HkyL2ZHf/Cabal.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/BnKvgYsm/Diners_Club.png"></div>
+                </div>
+            </div>
+
+            <div class="flags-section">
+                <div class="flags-title">Cartões Alimentação</div>
+                <div class="flags-grid">
+                    <div class="flag-card"><img src="https://i.postimg.cc/MGJpr7pv/Ben.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/QMZdnQxv/Pluxee.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/s2Cg0YgV/Ticket.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/d0cVS2Vs/Up.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/Dz3wYrw7/VR.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/JhCzdNz7/GreenCard.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/hGRt3Ltq/Alelo.png"></div>
+                </div>
+            </div>
+
+            <div class="flags-section">
+                <div class="flags-title">Carteiras Digitais</div>
+                <div class="flags-grid">
+                    <div class="flag-card"><img src="https://i.postimg.cc/k5Ngr22g/AME.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/tgd40ssn/Banco_inter.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/0NGygzzM/Banco_original.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/Xv6YDfYX/Nubank.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/1z03x88s/Mercado_Pago.png"></div>
+                    <div class="flag-card"><img src="https://i.postimg.cc/VN9kyJJ1/PicPay.png"></div>
+                </div>
+            </div>
+            
+            <div style="height: 40px;"></div>
+        `;
+    }
+})();
+</script>
 </body>
 </html>
