@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="The Kings">
+<link rel="apple-touch-icon" href="https://i.postimg.cc/C1nrB0SK/Logo.png">
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>The Kings - Totem</title>
@@ -422,5 +427,82 @@
             showScreen('screen-name');
         }
     </script>
+    <script>
+    // 1. TRAVAR ROLAGEM (IMPEDIR QUE A BARRA APAREÇA AO ARRASTAR)
+    document.addEventListener('touchmove', function(e) {
+        if (!e.target.closest('.screen')) { // Permite scroll apenas dentro das telas
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    // 2. LÓGICA DO SISTEMA THE KINGS
+    let pedido = {
+        cliente: "",
+        produto: "",
+        valorBase: 0,
+        total: 0,
+        gratuitosSelecionados: 0
+    };
+
+    // Função para mudar de tela
+    function irParaTela(id) {
+        document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'flex';
+        window.scrollTo(0, 0);
+    }
+
+    // Iniciar pedido e salvar nome
+    function confirmarNome() {
+        const nome = document.getElementById('input-nome').value;
+        if(nome.trim() === "") { alert("Por favor, digite seu nome"); return; }
+        pedido.cliente = nome;
+        document.getElementById('nome-exibicao').innerText = nome;
+        irParaTela('tela-menu');
+    }
+
+    // Gerenciar Adicionais (Regra: Máximo 3 gratuitos)
+    function alterarAdicional(nome, preco, mudanca) {
+        const spanQtd = document.getElementById('qtd-' + nome);
+        let qtdAtual = parseInt(spanQtd.innerText);
+
+        if (preco === 0) { // Regra para Gratuitos
+            if (mudanca > 0 && pedido.gratuitosSelecionados >= 3) {
+                alert("Limite de 3 adicionais gratuitos atingido!");
+                return;
+            }
+            if (mudanca < 0 && qtdAtual <= 0) return;
+            
+            qtdAtual += mudanca;
+            pedido.gratuitosSelecionados += mudanca;
+        } else { // Regra para Pagos
+            if (mudanca < 0 && qtdAtual <= 0) return;
+            qtdAtual += mudanca;
+            pedido.total += (preco * mudanca);
+        }
+
+        spanQtd.innerText = qtdAtual;
+        atualizarTotalNoDisplay();
+    }
+
+    function atualizarTotalNoDisplay() {
+        const totalFormatado = "R$ " + pedido.total.toFixed(2).replace('.', ',');
+        document.getElementById('display-total').innerText = totalFormatado;
+        document.getElementById('display-total-pagamento').innerText = totalFormatado;
+    }
+
+    // Finalização e Reset (Igual Totem BK)
+    function finalizarPedido() {
+        const msgFinal = `Pedido enviado, ${pedido.cliente}.\nAgradecemos a preferência.\nAguarde até ser chamado.`;
+        document.getElementById('mensagem-agradecimento').innerText = msgFinal;
+        irParaTela('tela-final');
+    }
+
+    function resetarSistema() {
+        pedido = { cliente: "", produto: "", valorBase: 0, total: 0, gratuitosSelecionados: 0 };
+        document.getElementById('input-nome').value = "";
+        // Limpar todos os contadores de tela aqui...
+        irParaTela('tela-inicial');
+    }
+</script>
 </body>
 </html>
