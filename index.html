@@ -9,228 +9,181 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #2f2f2f;
-  color: #fff;
+  background: #f5f5f5;
+  color: #222;
 }
 
-.screen { display: none; padding: 20px; }
-.active { display: block; }
+.header {
+  padding: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
 
-button {
-  padding: 14px;
-  font-size: 18px;
-  border: none;
-  border-radius: 8px;
+.list {
+  background: #fff;
+}
+
+.item {
+  display: flex;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
   cursor: pointer;
 }
 
-.primary {
-  background: #ffcc00;
-  color: #000;
-  width: 100%;
-  margin-top: 15px;
-}
-
-.card {
-  background: #444;
-  border-radius: 12px;
-  padding: 10px;
-  margin-bottom: 15px;
-}
-
-.card img {
-  width: 100%;
-  border-radius: 10px;
-}
-
-.addons {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-}
-
-.addon {
-  background: #555;
-  border-radius: 10px;
-  padding: 10px;
-  text-align: center;
-}
-
-.addon img {
-  width: 100%;
-  height: 100px;
+.item img {
+  width: 70px;
+  height: 70px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 6px;
+  margin-left: auto;
 }
+
+.info {
+  max-width: 70%;
+}
+
+.info h4 {
+  margin: 0 0 5px;
+}
+
+.info p {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.price {
+  margin-top: 5px;
+  font-weight: bold;
+}
+
+.add {
+  font-size: 28px;
+  color: #7b2cff;
+  margin-left: auto;
+}
+
+.footer {
+  padding: 15px;
+  background: #7b2cff;
+  color: #fff;
+  text-align: center;
+  font-size: 18px;
+}
+
+.hidden { display:none; }
 </style>
 </head>
 
 <body>
 
-<!-- SPLASH + NOME -->
-<div id="start" class="screen active" style="text-align:center;">
-  <img src="https://i.postimg.cc/Vkvm5SrB/The-Kings-Logo.png" width="220"><br><br>
+<!-- TELA PRODUTOS -->
+<div id="productsScreen">
+  <div class="header">Açaís</div>
+  <div class="list">
 
-  <input id="clientName"
-    placeholder="Digite seu nome"
-    style="width:90%;padding:15px;font-size:18px;border-radius:8px;border:none;"><br>
+    <div class="item" onclick="openAddons('Copo de Açaí 300ml',13)">
+      <div class="info">
+        <h4>Copo de Açaí 300ml</h4>
+        <p>Com 3 complementos</p>
+        <div class="price">R$ 13,00</div>
+      </div>
+      <img src="https://i.postimg.cc/yNdNcQJ4/Acai-de-300ML.webp">
+    </div>
 
-  <button class="primary" onclick="goMenu()">Começar pedido</button>
+    <div class="item" onclick="openAddons('Copo de Açaí 550ml',17)">
+      <div class="info">
+        <h4>Copo de Açaí 550ml</h4>
+        <p>Com 4 complementos</p>
+        <div class="price">R$ 17,00</div>
+      </div>
+      <img src="https://i.postimg.cc/5t0tL7Xh/Acai-500-e-700ml.webp">
+    </div>
+
+    <div class="item" onclick="openAddons('Copo de Açaí 700ml',24)">
+      <div class="info">
+        <h4>Copo de Açaí 700ml</h4>
+        <p>Com 4 complementos</p>
+        <div class="price">R$ 24,00</div>
+      </div>
+      <img src="https://i.postimg.cc/5t0tL7Xh/Acai-500-e-700ml.webp">
+    </div>
+
+  </div>
 </div>
 
-<!-- CARDÁPIO -->
-<div id="menu" class="screen">
-  <h2>Escolha seu Açaí</h2>
-  <div id="products"></div>
-</div>
-
-<!-- PRODUTO -->
-<div id="product" class="screen">
-  <h2 id="productName"></h2>
-
-  <p>Quantidade:</p>
-  <button onclick="qty--,update()">−</button>
-  <strong id="qty">1</strong>
-  <button onclick="qty++,update()">+</button>
-
-  <h3>Adicionais Gratuitos (3)</h3>
-  <p id="freeCount">0 / 3</p>
-  <div class="addons" id="freeAddons"></div>
-
-  <h3>Adicionais Pagos</h3>
-  <div class="addons" id="paidAddons"></div>
-
-  <h2>Total: R$ <span id="total">0.00</span></h2>
-  <button class="primary" onclick="goPayment()">Ir para pagamento</button>
-</div>
-
-<!-- PAGAMENTO -->
-<div id="payment" class="screen">
-  <h2>Total: R$ <span id="finalTotal"></span></h2>
-  <button class="primary" onclick="payPix()">Pix</button>
-  <button class="primary" onclick="finish()">Dinheiro</button>
-  <button class="primary" onclick="finish()">Cartão</button>
-</div>
-
-<!-- PIX -->
-<div id="pix" class="screen">
-  <h2>Pix - R$ <span id="pixValue"></span></h2>
-  <img src="https://i.postimg.cc/xCt0pLWD/QR-CODE.jpg" width="220"><br><br>
-  <strong>gl_oficial@jim.com</strong>
-  <button class="primary" onclick="finish()">Já paguei</button>
-</div>
-
-<!-- FINAL -->
-<div id="final" class="screen" style="text-align:center;">
-  <h2 id="thanks"></h2>
-  <p>Pedido enviado.<br>Aguarde até ser chamado.</p>
-  <button class="primary" onclick="location.reload()">Fazer novo pedido</button>
+<!-- TELA ADICIONAIS -->
+<div id="addonsScreen" class="hidden">
+  <div class="header" onclick="back()">← Selecione os Complementos</div>
+  <div class="list" id="addonsList"></div>
+  <div class="footer" onclick="back()">Avançar</div>
 </div>
 
 <script>
-/* ===== DADOS ===== */
-var products = [
-  {name:"Barca de Açaí Média",price:35,image:"LINK_DA_IMAGEM_AQUI"},
-  {name:"Copo 300ml",price:13,image:"LINK_DA_IMAGEM_AQUI"},
-  {name:"Copo 550ml",price:16,image:"LINK_DA_IMAGEM_AQUI"},
-  {name:"Copo 700ml",price:21,image:"LINK_DA_IMAGEM_AQUI"}
-];
+var freeLimit = 3;
+var freeUsed = 0;
+var total = 0;
 
 var freeAddons = [
-  {name:"Confete",image:"LINK_DA_IMAGEM_AQUI"},
-  {name:"Leite em Pó",image:"LINK_DA_IMAGEM_AQUI"},
-  {name:"Banana",image:"LINK_DA_IMAGEM_AQUI"},
-  {name:"Morango",image:"LINK_DA_IMAGEM_AQUI"}
+"Confete M&M's","Leite em Pó","Chocobol","Cobertura de Chocolate",
+"Cobertura de Morango","Amendoim","Sucrilhos","Gotas de Oreo",
+"Granola","Bis Preto","Bis Branco","Bala de Goma",
+"Marshmallow","Banana","Morango","Uva","Abacaxi"
 ];
 
 var paidAddons = [
-  {name:"Nutella",price:7,image:"LINK_DA_IMAGEM_AQUI"},
-  {name:"Sorvete",price:3,image:"LINK_DA_IMAGEM_AQUI"}
+["Stikadinho",5],["Sorvete",3],["OvoMaltine",3],
+["Ouro Branco",4],["Nutella",7],["Kit Kat",5],
+["Creme de Pistache",5],["Creme de Oreo",5],
+["Creme de Morango",5],["Creme de Maracujá",5],
+["Creme de Leitinho",5],["Creme de Avelã",5],
+["Creme de Amendoim",5],["Fini Beijos",4],
+["Fini Banana",4],["Fini Granola",4]
 ];
 
-/* ===== ESTADO ===== */
-var client="", current=0, qty=1, freeUsed=0, paidTotal=0;
+function openAddons(name, price){
+  document.getElementById("productsScreen").classList.add("hidden");
+  document.getElementById("addonsScreen").classList.remove("hidden");
+  freeUsed = 0;
+  total = price;
 
-/* ===== FUNÇÕES ===== */
-function show(id){
-  var s=document.getElementsByClassName("screen");
-  for(var i=0;i<s.length;i++) s[i].classList.remove("active");
-  document.getElementById(id).classList.add("active");
+  var list = document.getElementById("addonsList");
+  list.innerHTML = "";
+
+  freeAddons.forEach(a=>{
+    list.innerHTML += `
+      <div class="item">
+        <div class="info"><h4>${a}</h4></div>
+        <img src="https://i.postimg.cc/LsXsLCJr/Adicionais.png">
+        <div class="add" onclick="addFree(this)">+</div>
+      </div>`;
+  });
+
+  paidAddons.forEach(a=>{
+    list.innerHTML += `
+      <div class="item">
+        <div class="info"><h4>${a[0]}</h4><p>R$ ${a[1]},00</p></div>
+        <img src="https://i.postimg.cc/LsXsLCJr/Adicionais.png">
+        <div class="add" onclick="addPaid(${a[1]})">+</div>
+      </div>`;
+  });
 }
 
-function goMenu(){
-  client=document.getElementById("clientName").value.trim();
-  if(!client){ alert("Digite seu nome"); return; }
-  loadProducts();
-  show("menu");
+function addFree(el){
+  if(freeUsed >= freeLimit) return;
+  freeUsed++;
+  el.style.opacity = 0.3;
 }
 
-function loadProducts(){
-  var div=document.getElementById("products");
-  div.innerHTML="";
-  for(var i=0;i<products.length;i++){
-    div.innerHTML+=
-      '<div class="card">'+
-      '<img src="'+products[i].image+'">'+
-      '<h3>'+products[i].name+'</h3>'+
-      '<p>R$ '+products[i].price.toFixed(2)+'</p>'+
-      '<button onclick="selectProduct('+i+')">Selecionar</button>'+
-      '</div>';
-  }
+function addPaid(v){
+  total += v;
 }
 
-function selectProduct(i){
-  current=i; qty=1; freeUsed=0; paidTotal=0;
-  document.getElementById("productName").innerText=products[i].name;
-  loadAddons();
-  update();
-  show("product");
-}
-
-function loadAddons(){
-  var f=document.getElementById("freeAddons");
-  var p=document.getElementById("paidAddons");
-  f.innerHTML=""; p.innerHTML="";
-  document.getElementById("freeCount").innerText="0 / 3";
-
-  for(var i=0;i<freeAddons.length;i++){
-    f.innerHTML+='<div class="addon"><img src="'+freeAddons[i].image+'"><p>'+freeAddons[i].name+'</p><button onclick="addFree(this)">Adicionar</button></div>';
-  }
-
-  for(var j=0;j<paidAddons.length;j++){
-    p.innerHTML+='<div class="addon"><img src="'+paidAddons[j].image+'"><p>'+paidAddons[j].name+' R$ '+paidAddons[j].price+'</p><button onclick="addPaid('+paidAddons[j].price+')">+</button></div>';
-  }
-}
-
-function addFree(btn){
-  if(freeUsed>=3) return;
-  freeUsed++; btn.disabled=true;
-  document.getElementById("freeCount").innerText=freeUsed+" / 3";
-}
-
-function addPaid(v){ paidTotal+=v; update(); }
-
-function update(){
-  if(qty<1) qty=1;
-  document.getElementById("qty").innerText=qty;
-  var t=(products[current].price*qty)+paidTotal;
-  document.getElementById("total").innerText=t.toFixed(2);
-}
-
-function goPayment(){
-  document.getElementById("finalTotal").innerText=document.getElementById("total").innerText;
-  show("payment");
-}
-
-function payPix(){
-  document.getElementById("pixValue").innerText=document.getElementById("total").innerText;
-  show("pix");
-}
-
-function finish(){
-  document.getElementById("thanks").innerText="Obrigado, "+client+"!";
-  show("final");
-  setTimeout(function(){ window.print(); },500);
+function back(){
+  document.getElementById("addonsScreen").classList.add("hidden");
+  document.getElementById("productsScreen").classList.remove("hidden");
 }
 </script>
 
