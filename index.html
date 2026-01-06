@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>The Kings • Açaí</title>
+
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #e5e5e5;
+  color: #111;
+}
+.hidden { display: none; }
+
+button {
+  padding: 14px;
+  font-size: 18px;
+  border: none;
+  border-radius: 6px;
+  margin: 6px 0;
+  width: 100%;
+}
+.btn-dark { background: #111; color: #fff; }
+.btn-green { background: #2ecc71; color: #fff; }
+
+.screen { padding: 16px; }
+
+#splash {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#splash img { width: 260px; }
+
+.products {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+}
+.card img {
+  width: 100%;
+  border-radius: 6px;
+}
+
+.cart-btn {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background: #111;
+  color: #fff;
+  border-radius: 50px;
+  padding: 14px 18px;
+  font-size: 18px;
+}
+
+.total {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.addons {
+  background: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+.addons h4 { margin: 6px 0; }
+.addons label {
+  display: block;
+  font-size: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <img src="https://i.postimg.cc/Vkvm5SrB/The-Kings-Logo.png">
+</div>
+
+<!-- LOGIN -->
+<div id="login" class="screen hidden">
+  <h2>Digite seu nome</h2>
+  <input id="nameInput" placeholder="Seu nome" style="width:100%;padding:14px;font-size:18px">
+  <button class="btn-dark" onclick="enter()">Entrar</button>
+</div>
+
+<!-- CATALOGO -->
+<div id="catalog" class="screen hidden">
+  <h2>Cardápio</h2>
+  <div class="products" id="productList"></div>
+  <div class="cart-btn" onclick="openCart()">🛒</div>
+</div>
+
+<!-- PRODUTO -->
+<div id="product" class="screen hidden">
+  <h2 id="prodName"></h2>
+  <p>Preço base: R$ <span id="prodPrice"></span></p>
+
+  <div class="addons">
+    <h4>Adicionais gratuitos</h4>
+    <div id="addonsFree"></div>
+  </div>
+
+  <div class="addons">
+    <h4>Adicionais pagos</h4>
+    <div id="addonsPaid"></div>
+  </div>
+
+  <div class="total">Total: R$ <span id="prodTotal"></span></div>
+  <button class="btn-green" onclick="addToCart()">Adicionar ao carrinho</button>
+  <button class="btn-dark" onclick="backCatalog()">Voltar</button>
+</div>
+
+<!-- CARRINHO -->
+<div id="cart" class="screen hidden">
+  <h2>Carrinho</h2>
+  <div id="cartItems"></div>
+  <div class="total">Total: R$ <span id="cartTotal"></span></div>
+  <button class="btn-green" onclick="openPayment()">Pagar</button>
+</div>
+
+<!-- PAGAMENTO -->
+<div id="payment" class="screen hidden">
+  <h2>Pagamento</h2>
+  <div class="total">Total: R$ <span id="payTotal"></span></div>
+
+  <button class="btn-green" onclick="selectPay('pix')">Pix</button>
+  <button class="btn-dark" onclick="selectPay('money')">Dinheiro</button>
+  <button class="btn-dark" onclick="selectPay('card')">Cartão</button>
+
+  <div id="pix" class="hidden">
+    <img src="https://i.postimg.cc/xCt0pLWD/QR-CODE.jpg" style="width:200px">
+    <p><b>gl_oficial@jim.com</b></p>
+    <button class="btn-green" onclick="printOrder()">Imprimir pedido</button>
+  </div>
+
+  <div id="money" class="hidden">
+    <p>Precisa de troco?</p>
+    <select id="trocoSel">
+      <option>Não</option>
+      <option>Sim</option>
+    </select>
+    <input placeholder="Troco para quanto?" style="width:100%;padding:10px">
+    <button class="btn-green" onclick="printOrder()">Imprimir pedido</button>
+  </div>
+
+  <div id="card" class="hidden">
+    <select>
+      <option>Débito</option>
+      <option>Crédito</option>
+      <option>Vale Alimentação</option>
+      <option>Pé-de-Meia</option>
+      <option>Bolsa Família</option>
+    </select>
+    <button class="btn-green" onclick="printOrder()">Imprimir pedido</button>
+  </div>
+</div>
+
+<!-- FINAL -->
+<div id="final" class="screen hidden">
+  <h2>Pedido enviado, <span id="finalName"></span></h2>
+  <p>Agradecemos a preferência!<br><b>Aguarde até ser chamado.</b></p>
+  <button class="btn-dark" onclick="restart()">Fazer novo pedido</button>
+</div>
+
+<script>
+/* ===== DADOS ===== */
+var userName="", cart=[], currentProduct=null, currentAddons=[];
+var products=[
+  {name:"Barca de Açaí Média", price:35},
+  {name:"Copo 300ml", price:13},
+  {name:"Copo 550ml", price:16},
+  {name:"Copo 700ml", price:21}
+];
+
+var addonsFree=[
+"Confete M&M's","Leite em Pó","Chocobol","Cobertura de Chocolate","Cobertura de Morango",
+"Amendoim","Sucrilhos","Gotas de Oreo","Granola","Bis Preto","Bis Branco",
+"Bala de Goma","Marshmallow","Banana","Morango","Uva","Abacaxi"
+];
+
+var addonsPaid=[
+{name:"Stikadinho",price:5},
+{name:"Sorvete",price:3},
+{name:"OvoMaltine",price:3},
+{name:"Ouro Branco",price:4},
+{name:"Nutella",price:7},
+{name:"Kit Kat",price:5},
+{name:"Creme Pistache",price:5},
+{name:"Creme OvoMaltine",price:5},
+{name:"Creme Oreo",price:5},
+{name:"Creme Morango",price:5},
+{name:"Creme Maracujá",price:5},
+{name:"Creme Leitinho",price:5},
+{name:"Creme KitKat",price:5},
+{name:"Creme Avelã",price:5},
+{name:"Creme Amendoim",price:5},
+{name:"Creme Fini Beijos",price:4},
+{name:"Creme Fini Banana",price:4},
+{name:"Creme Fini Granola",price:4}
+];
+
+/* ===== FLUXO ===== */
+setTimeout(()=>{ splash.classList.add("hidden"); login.classList.remove("hidden"); },2000);
+
+function enter(){
+  userName=nameInput.value.trim();
+  if(!userName) return;
+  login.classList.add("hidden");
+  catalog.classList.remove("hidden");
+  loadProducts();
+}
+
+function loadProducts(){
+  productList.innerHTML="";
+  products.forEach((p,i)=>{
+    productList.innerHTML+=`
+      <div class="card">
+        <h3>${p.name}</h3>
+        <p>R$ ${p.price.toFixed(2)}</p>
+        <button onclick="openProduct(${i})">Escolher</button>
+      </div>`;
+  });
+}
+
+function openProduct(i){
+  currentProduct=products[i];
+  currentAddons=[];
+  catalog.classList.add("hidden");
+  product.classList.remove("hidden");
+  prodName.innerText=currentProduct.name;
+  prodPrice.innerText=currentProduct.price.toFixed(2);
+  renderAddons();
+  updateTotal();
+}
+
+function renderAddons(){
+  addonsFreeEl.innerHTML="";
+  addonsFree.forEach(a=>{
+    addonsFreeEl.innerHTML+=`<label><input type="checkbox" onchange="toggleAddon('${a}',0)"> ${a}</label>`;
+  });
+  addonsPaidEl.innerHTML="";
+  addonsPaid.forEach(a=>{
+    addonsPaidEl.innerHTML+=`<label><input type="checkbox" onchange="toggleAddon('${a.name}',${a.price})"> ${a.name} (+R$ ${a.price})</label>`;
+  });
+}
+
+function toggleAddon(name,price){
+  var i=currentAddons.findIndex(a=>a.name==name);
+  if(i>-1) currentAddons.splice(i,1);
+  else currentAddons.push({name,price});
+  updateTotal();
+}
+
+function updateTotal(){
+  var t=currentProduct.price;
+  currentAddons.forEach(a=>t+=a.price);
+  prodTotal.innerText=t.toFixed(2);
+}
+
+function addToCart(){
+  cart.push({product:currentProduct,addons:currentAddons});
+  backCatalog();
+}
+
+function backCatalog(){
+  product.classList.add("hidden");
+  catalog.classList.remove("hidden");
+}
+
+function openCart(){
+  catalog.classList.add("hidden");
+  cartDiv=cartItems; cartDiv.innerHTML="";
+  var t=0;
+  cart.forEach(c=>{
+    var line=c.product.name;
+    c.addons.forEach(a=>line+=" + "+a.name);
+    var p=c.product.price+c.addons.reduce((s,a)=>s+a.price,0);
+    t+=p;
+    cartDiv.innerHTML+=`<p>${line} — R$ ${p.toFixed(2)}</p>`;
+  });
+  cartTotal.innerText=t.toFixed(2);
+  cartDiv.parentElement.classList.remove("hidden");
+}
+
+function openPayment(){
+  cart.classList.add("hidden");
+  payment.classList.remove("hidden");
+  payTotal.innerText=cartTotal.innerText;
+}
+
+function selectPay(t){
+  ["pix","money","card"].forEach(i=>document.getElementById(i).classList.add("hidden"));
+  document.getElementById(t).classList.remove("hidden");
+}
+
+function printOrder(){
+  window.print();
+  payment.classList.add("hidden");
+  final.classList.remove("hidden");
+  finalName.innerText=userName;
+}
+
+function restart(){
+  cart=[];
+  final.classList.add("hidden");
+  catalog.classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>
