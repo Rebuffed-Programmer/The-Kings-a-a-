@@ -3,187 +3,237 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Kings</title>
+<title>The Kings • Pedido</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
-  color: #222;
+body{
+  margin:0;
+  font-family:-apple-system, BlinkMacSystemFont, sans-serif;
+  background:#eaeaea;
+  color:#222;
 }
 
-.header {
-  padding: 15px;
-  font-size: 20px;
-  font-weight: bold;
-  background: #fff;
-  border-bottom: 1px solid #ddd;
+header{
+  background:#5f5f5f;
+  padding:16px;
+  text-align:center;
+}
+header img{
+  height:70px;
+}
+#clienteNome{
+  margin-top:8px;
+  font-size:18px;
+  font-weight:600;
+  color:#fff;
 }
 
-.list {
-  background: #fff;
+section{
+  padding:16px;
 }
 
-.item {
-  display: flex;
-  padding: 12px;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
+h2{
+  margin:10px 0;
 }
 
-.item img {
-  width: 70px;
-  height: 70px;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-left: auto;
+.card{
+  background:#fff;
+  border-radius:16px;
+  padding:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+  box-shadow:0 2px 6px rgba(0,0,0,.1);
 }
 
-.info {
-  max-width: 70%;
+.card img{
+  width:90px;
+  height:90px;
+  border-radius:12px;
+  object-fit:cover;
 }
 
-.info h4 {
-  margin: 0 0 5px;
+.card-info{
+  flex:1;
+  padding-right:12px;
 }
 
-.info p {
-  margin: 0;
-  font-size: 13px;
-  color: #666;
+.btn{
+  background:#7b2cff;
+  color:#fff;
+  border:none;
+  border-radius:12px;
+  padding:12px;
+  width:100%;
+  font-size:18px;
+  margin-top:10px;
 }
 
-.price {
-  margin-top: 5px;
-  font-weight: bold;
+.hidden{display:none;}
+
+.adicional{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#fff;
+  border-radius:14px;
+  padding:10px;
+  margin-bottom:8px;
 }
 
-.add {
-  font-size: 28px;
-  color: #7b2cff;
-  margin-left: auto;
+.adicional img{
+  width:50px;
+  height:50px;
+  border-radius:10px;
 }
 
-.footer {
-  padding: 15px;
-  background: #7b2cff;
-  color: #fff;
-  text-align: center;
-  font-size: 18px;
+.plus{
+  font-size:26px;
+  font-weight:bold;
+  color:#7b2cff;
 }
 
-.hidden { display:none; }
+input[type=text], select{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  margin-top:8px;
+}
 </style>
 </head>
 
 <body>
 
-<!-- TELA PRODUTOS -->
-<div id="productsScreen">
-  <div class="header">Açaís</div>
-  <div class="list">
+<header>
+  <img src="https://i.postimg.cc/Vkvm5SrB/The-Kings-Logo.png">
+  <div id="clienteNome"></div>
+</header>
 
-    <div class="item" onclick="openAddons('Copo de Açaí 300ml',13)">
-      <div class="info">
-        <h4>Copo de Açaí 300ml</h4>
-        <p>Com 3 complementos</p>
-        <div class="price">R$ 13,00</div>
-      </div>
-      <img src="https://i.postimg.cc/yNdNcQJ4/Acai-de-300ML.webp">
+<section id="nomeTela">
+  <h2>Qual seu nome?</h2>
+  <input type="text" id="nomeInput" placeholder="Digite seu nome">
+  <button class="btn" onclick="salvarNome()">Continuar</button>
+</section>
+
+<section id="menuTela" class="hidden">
+  <h2>Açaís</h2>
+
+  <div class="card" onclick="abrirAdicionais('300ml',13)">
+    <div class="card-info">
+      <b>Copo de Açaí 300ml</b><br>3 complementos
     </div>
-
-    <div class="item" onclick="openAddons('Copo de Açaí 550ml',17)">
-      <div class="info">
-        <h4>Copo de Açaí 550ml</h4>
-        <p>Com 4 complementos</p>
-        <div class="price">R$ 17,00</div>
-      </div>
-      <img src="https://i.postimg.cc/5t0tL7Xh/Acai-500-e-700ml.webp">
-    </div>
-
-    <div class="item" onclick="openAddons('Copo de Açaí 700ml',24)">
-      <div class="info">
-        <h4>Copo de Açaí 700ml</h4>
-        <p>Com 4 complementos</p>
-        <div class="price">R$ 24,00</div>
-      </div>
-      <img src="https://i.postimg.cc/5t0tL7Xh/Acai-500-e-700ml.webp">
-    </div>
-
+    <img src="https://i.postimg.cc/wj5N0GT8/Acai-300.jpg">
   </div>
-</div>
 
-<!-- TELA ADICIONAIS -->
-<div id="addonsScreen" class="hidden">
-  <div class="header" onclick="back()">← Selecione os Complementos</div>
-  <div class="list" id="addonsList"></div>
-  <div class="footer" onclick="back()">Avançar</div>
-</div>
+  <div class="card" onclick="abrirAdicionais('500/700ml',24)">
+    <div class="card-info">
+      <b>Copo de Açaí 500/700ml</b><br>4 complementos
+    </div>
+    <img src="https://i.postimg.cc/7Z1zmWY4/Acai-500-700.jpg">
+  </div>
+</section>
+
+<section id="adicionaisTela" class="hidden">
+  <h2>Escolha os adicionais</h2>
+
+  <div id="listaAdicionais"></div>
+
+  <button class="btn" onclick="irPagamento()">Avançar</button>
+</section>
+
+<section id="pagamentoTela" class="hidden">
+  <h2>Pagamento</h2>
+
+  <select id="pagamento" onchange="trocoToggle()">
+    <option value="">Selecione</option>
+    <option value="pix">Pix</option>
+    <option value="dinheiro">Dinheiro</option>
+  </select>
+
+  <div id="pixBox" class="hidden">
+    <p><b>Chave Pix:</b><br>gl_oficial@jim.com</p>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=gl_oficial@jim.com">
+    <p>Escaneie ou copie a chave e pague o valor do pedido.</p>
+  </div>
+
+  <div id="trocoBox" class="hidden">
+    <label>Precisa de troco?</label>
+    <select id="trocoSelect" onchange="valorTroco()">
+      <option value="nao">Não</option>
+      <option value="sim">Sim</option>
+    </select>
+    <input type="text" id="trocoValor" placeholder="Valor para troco" class="hidden">
+  </div>
+
+  <button class="btn" onclick="finalizar()">Finalizar Pedido</button>
+</section>
+
+<section id="finalTela" class="hidden">
+  <h2>Pedido enviado.</h2>
+  <p>Aguarde até ser chamado.</p>
+  <button class="btn" onclick="location.reload()">Fazer novo pedido</button>
+</section>
 
 <script>
-var freeLimit = 3;
-var freeUsed = 0;
-var total = 0;
-
-var freeAddons = [
-"Confete M&M's","Leite em Pó","Chocobol","Cobertura de Chocolate",
-"Cobertura de Morango","Amendoim","Sucrilhos","Gotas de Oreo",
-"Granola","Bis Preto","Bis Branco","Bala de Goma",
+let adicionaisGratis=0;
+const adicionais=[
+"Confete M&M's","Leite em Pó","Chocobol","Cobertura de Chocolate","Cobertura de Morango",
+"Amendoim","Sucrilhos","Gotas de Oreo","Granola","Bis Preto","Bis Branco","Bala de Goma",
 "Marshmallow","Banana","Morango","Uva","Abacaxi"
 ];
 
-var paidAddons = [
-["Stikadinho",5],["Sorvete",3],["OvoMaltine",3],
-["Ouro Branco",4],["Nutella",7],["Kit Kat",5],
-["Creme de Pistache",5],["Creme de Oreo",5],
-["Creme de Morango",5],["Creme de Maracujá",5],
-["Creme de Leitinho",5],["Creme de Avelã",5],
-["Creme de Amendoim",5],["Fini Beijos",4],
-["Fini Banana",4],["Fini Granola",4]
-];
+function salvarNome(){
+  const n=document.getElementById("nomeInput").value;
+  if(!n)return;
+  document.getElementById("clienteNome").innerText=n;
+  nomeTela.classList.add("hidden");
+  menuTela.classList.remove("hidden");
+}
 
-function openAddons(name, price){
-  document.getElementById("productsScreen").classList.add("hidden");
-  document.getElementById("addonsScreen").classList.remove("hidden");
-  freeUsed = 0;
-  total = price;
-
-  var list = document.getElementById("addonsList");
-  list.innerHTML = "";
-
-  freeAddons.forEach(a=>{
-    list.innerHTML += `
-      <div class="item">
-        <div class="info"><h4>${a}</h4></div>
-        <img src="https://i.postimg.cc/LsXsLCJr/Adicionais.png">
-        <div class="add" onclick="addFree(this)">+</div>
-      </div>`;
-  });
-
-  paidAddons.forEach(a=>{
-    list.innerHTML += `
-      <div class="item">
-        <div class="info"><h4>${a[0]}</h4><p>R$ ${a[1]},00</p></div>
-        <img src="https://i.postimg.cc/LsXsLCJr/Adicionais.png">
-        <div class="add" onclick="addPaid(${a[1]})">+</div>
-      </div>`;
+function abrirAdicionais(){
+  menuTela.classList.add("hidden");
+  adicionaisTela.classList.remove("hidden");
+  const box=document.getElementById("listaAdicionais");
+  box.innerHTML="";
+  adicionais.forEach(a=>{
+    box.innerHTML+=`
+    <div class="adicional">
+      <div>${a}</div>
+      <img src="https://i.postimg.cc/LsXsLCJr/Adicionais.png">
+      <div class="plus" onclick="add()">+</div>
+    </div>`;
   });
 }
 
-function addFree(el){
-  if(freeUsed >= freeLimit) return;
-  freeUsed++;
-  el.style.opacity = 0.3;
+function add(){
+  if(adicionaisGratis>=3){
+    alert("Limite de 3 adicionais gratuitos atingido");
+    return;
+  }
+  adicionaisGratis++;
 }
 
-function addPaid(v){
-  total += v;
+function irPagamento(){
+  adicionaisTela.classList.add("hidden");
+  pagamentoTela.classList.remove("hidden");
 }
 
-function back(){
-  document.getElementById("addonsScreen").classList.add("hidden");
-  document.getElementById("productsScreen").classList.remove("hidden");
+function trocoToggle(){
+  pixBox.classList.add("hidden");
+  trocoBox.classList.add("hidden");
+  if(pagamento.value==="pix") pixBox.classList.remove("hidden");
+  if(pagamento.value==="dinheiro") trocoBox.classList.remove("hidden");
+}
+
+function valorTroco(){
+  trocoValor.classList.toggle("hidden", trocoSelect.value!=="sim");
+}
+
+function finalizar(){
+  pagamentoTela.classList.add("hidden");
+  finalTela.classList.remove("hidden");
 }
 </script>
 
