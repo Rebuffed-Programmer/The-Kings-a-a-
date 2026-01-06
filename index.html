@@ -1,148 +1,426 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Kings</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Kings - Totem</title>
+    <style>
+        :root {
+            --cor-fundo: #2b2b2b;
+            --cor-card: #3d3d3d;
+            --cor-primaria: #f5a623; /* Tom Burger King */
+            --cor-texto: #ffffff;
+            --cor-sucesso: #4caf50;
+        }
 
-<style>
-body{margin:0;font-family:-apple-system;background:#eaeaea}
-header{background:#555;padding:16px;text-align:center}
-header img{height:70px}
-#nomeCliente{color:#fff;margin-top:6px;font-size:18px}
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Evita scroll indesejado no totem */
+            height: 100vh;
+        }
 
-section{padding:16px}
-.card{
-  background:#fff;
-  border-radius:16px;
-  padding:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:12px;
-}
-.card img{width:90px;border-radius:12px}
-.btn{
-  width:100%;
-  background:#7b2cff;
-  color:#fff;
-  border:none;
-  padding:14px;
-  border-radius:14px;
-  font-size:18px;
-}
-.hidden{display:none}
+        /* Estrutura de Telas */
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            height: 100vh;
+            width: 100%;
+            overflow-y: auto;
+        }
 
-.pay-buttons{
-  display:flex;
-  gap:10px;
-}
-.pay-btn{
-  flex:1;
-  padding:20px;
-  border-radius:14px;
-  border:none;
-  font-size:18px;
-  font-weight:bold;
-}
-.dinheiro{background:#2ecc71;color:#fff}
-.cartao{background:#3498db;color:#fff}
-.pix{background:#9b59b6;color:#fff}
-</style>
+        .active { display: flex; }
+
+        .logo { width: 200px; margin-bottom: 10px; }
+        .user-name-display { font-size: 1.2rem; color: var(--cor-primaria); font-weight: bold; margin-bottom: 20px; }
+
+        /* Inputs e Botões */
+        input[type="text"], input[type="number"] {
+            padding: 20px;
+            font-size: 1.5rem;
+            border-radius: 10px;
+            border: none;
+            width: 80%;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .btn-main {
+            background-color: var(--cor-primaria);
+            color: #000;
+            padding: 25px 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* Menu de Produtos (Cards Grandes) */
+        .card-container { width: 100%; max-width: 800px; }
+        .product-card {
+            background: var(--cor-card);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.2s;
+        }
+        .product-card:active { border-color: var(--cor-primaria); background: #4d4d4d; }
+        .product-info { flex: 1; }
+        .product-info h2 { margin: 0; font-size: 1.8rem; }
+        .product-info p { margin: 5px 0 0; color: #ccc; }
+        .product-img { width: 120px; height: 120px; border-radius: 10px; object-fit: cover; margin-left: 20px; }
+
+        /* Lista de Adicionais */
+        .addon-item {
+            background: var(--cor-card);
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .addon-controls { display: flex; align-items: center; gap: 15px; flex: 1; }
+        .btn-qty {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: var(--cor-primaria);
+            cursor: pointer;
+        }
+        .btn-qty:disabled { background: #666; opacity: 0.5; }
+        .addon-qty { font-size: 1.5rem; min-width: 30px; text-align: center; }
+        .addon-name { flex: 2; font-size: 1.2rem; margin-left: 15px; }
+        .addon-price { color: var(--cor-primaria); font-weight: bold; margin-right: 15px; }
+        .addon-img-small { width: 80px; height: 80px; border-radius: 5px; object-fit: cover; }
+
+        /* Footer com Total */
+        .footer-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #1a1a1a;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 3px solid var(--cor-primaria);
+        }
+        .total-text { font-size: 1.5rem; font-weight: bold; }
+
+        /* Pagamento */
+        .pay-grid { display: flex; gap: 20px; margin-top: 40px; }
+        .btn-pay {
+            flex: 1;
+            padding: 40px 20px;
+            font-size: 1.5rem;
+            background: var(--cor-card);
+            color: white;
+            border: 2px solid var(--cor-primaria);
+            border-radius: 15px;
+            text-align: center;
+        }
+        .btn-pay:active { background: var(--cor-primaria); color: black; }
+
+        .qr-code { width: 300px; border-radius: 10px; background: white; padding: 10px; margin: 20px 0; }
+        
+        /* Utilitários */
+        .hidden { display: none; }
+        .text-center { text-align: center; }
+    </style>
 </head>
-
 <body>
 
-<header>
-  <img src="https://i.postimg.cc/C1nrB0SK/Logo.png">
-  <div id="nomeCliente"></div>
-</header>
-
-<section id="nomeTela">
-  <h2>Seu nome</h2>
-  <input id="nomeInput" style="width:100%;padding:12px;border-radius:10px">
-  <button class="btn" onclick="salvarNome()">Continuar</button>
-</section>
-
-<section id="menuTela" class="hidden">
-  <h2>Açaís</h2>
-
-  <div class="card" onclick="abrirPagamento()">
-    <div>
-      <b>Copo 300ml</b><br>3 adicionais
+    <div id="screen-name" class="screen active">
+        <img src="https://i.postimg.cc/C1nrB0SK/Logo.png" class="logo">
+        <h1>Bem-vindo!</h1>
+        <p>Como podemos te chamar?</p>
+        <input type="text" id="input-client-name" placeholder="Digite seu nome..." autocomplete="off">
+        <button class="btn-main" onclick="startOrder()">Começar Pedido</button>
     </div>
-    <img src="https://i.postimg.cc/wj5N0GT8/Acai-300.jpg">
-  </div>
 
-  <div class="card" onclick="abrirPagamento()">
-    <div>
-      <b>Copo 500ml</b><br>4 adicionais
+    <div id="screen-menu" class="screen">
+        <img src="https://i.postimg.cc/C1nrB0SK/Logo.png" class="logo">
+        <div id="user-display-menu" class="user-name-display"></div>
+        <h1>Escolha seu Açaí</h1>
+        
+        <div class="card-container">
+            <div class="product-card" onclick="selectProduct('Copo de Açaí 300ml', 15.00)">
+                <div class="product-info">
+                    <h2>Copo 300ml</h2>
+                    <p>R$ 13,00</p>
+                </div>
+                <img src="https://i.postimg.cc/wj5N0GT8/Acai-300.jpg" class="product-img">
+            </div>
+
+            <div class="product-card" onclick="selectProduct('Copo de Açaí 500ml', 20.00)">
+                <div class="product-info">
+                    <h2>Copo 500ml</h2>
+                    <p>R$ 16,00</p>
+                </div>
+                <img src="https://i.postimg.cc/wj5N0GT8/Acai-300.jpg" class="product-img" style="filter: hue-rotate(45deg);">
+            </div>
+
+            <div class="product-card" onclick="selectProduct('Copo de Açaí 700ml', 25.00)">
+                <div class="product-info">
+                    <h2>Copo 700ml</h2>
+                    <p>R$ 21,00</p>
+                </div>
+                <img src="https://i.postimg.cc/wj5N0GT8/Acai-300.jpg" class="product-img" style="filter: hue-rotate(90deg);">
+            </div>
+        </div>
     </div>
-    <img src="https://i.postimg.cc/7Z1zmWY4/Acai-500-700.jpg">
-  </div>
 
-  <div class="card" onclick="abrirPagamento()">
-    <div>
-      <b>Copo 700ml</b><br>4 adicionais
+    <div id="screen-addons" class="screen" style="padding-bottom: 120px;">
+        <div class="user-name-display" id="user-display-addons"></div>
+        <h3>Adicionais Gratuitos (Máx 3)</h3>
+        <div id="list-free-addons"></div>
+        
+        <h3 style="margin-top: 30px;">Adicionais Pagos</h3>
+        <div id="list-paid-addons"></div>
+
+        <div class="footer-bar">
+            <div class="total-text">Total: <span id="display-total">R$ 0,00</span></div>
+            <button class="btn-main" onclick="goToPayment()">Avançar</button>
+        </div>
     </div>
-    <img src="https://i.postimg.cc/7Z1zmWY4/Acai-500-700.jpg">
-  </div>
-</section>
 
-<section id="pagamentoTela" class="hidden">
-  <h2>Forma de pagamento</h2>
+    <div id="screen-payment" class="screen">
+        <h1>Pagamento</h1>
+        <div class="total-text" style="font-size: 3rem; color: var(--cor-primaria);">
+            Total: <span id="display-total-pay">R$ 0,00</span>
+        </div>
+        <p>Escolha a forma de pagamento:</p>
 
-  <div class="pay-buttons">
-    <button class="pay-btn dinheiro" onclick="dinheiro()">Dinheiro</button>
-    <button class="pay-btn cartao" onclick="cartao()">Cartão</button>
-    <button class="pay-btn pix" onclick="pix()">Pix</button>
-  </div>
+        <div class="pay-grid">
+            <div class="btn-pay" onclick="payMethod('money')">💵<br>Dinheiro</div>
+            <div class="btn-pay" onclick="payMethod('card')">💳<br>Cartão</div>
+            <div class="btn-pay" onclick="payMethod('pix')">🔁<br>Pix</div>
+        </div>
+    </div>
 
-  <div id="pixBox" class="hidden">
-    <img src="https://i.postimg.cc/xCt0pLWD/QR-CODE.jpg" style="width:220px;margin:20px auto;display:block">
-    <p style="text-align:center"><b>gl_oficial@jim.com</b></p>
-  </div>
+    <div id="screen-pix" class="screen">
+        <h1>Pagamento via PIX</h1>
+        <img src="https://i.postimg.cc/xCt0pLWD/QR-CODE.jpg" class="qr-code">
+        <p>Chave Pix: <strong>gl_oficial@jim.com</strong></p>
+        <p>Aponte a câmera ou use o "Copia e Cola"</p>
+        <button class="btn-main" onclick="finishOrder()">Já paguei / Confirmar</button>
+    </div>
 
-  <div id="trocoBox" class="hidden">
-    <p>Precisa de troco?</p>
-    <button class="btn" onclick="finalizar()">Não</button>
-    <input placeholder="Valor para troco" style="width:100%;padding:12px;margin-top:8px">
-    <button class="btn" onclick="finalizar()">Confirmar</button>
-  </div>
-</section>
+    <div id="screen-money" class="screen">
+        <h1>Pagamento em Dinheiro</h1>
+        <p>Você precisa de troco?</p>
+        <div style="display: flex; gap: 20px;">
+            <button class="btn-main" onclick="document.getElementById('change-box').classList.remove('hidden')">SIM</button>
+            <button class="btn-main" style="background: #999;" onclick="finishOrder()">NÃO</button>
+        </div>
+        <div id="change-box" class="hidden" style="margin-top: 20px;">
+            <p>Troco para quanto?</p>
+            <input type="number" id="input-change" placeholder="Ex: 50">
+            <br>
+            <button class="btn-main" onclick="finishOrder()">Confirmar</button>
+        </div>
+    </div>
 
-<section id="finalTela" class="hidden">
-  <h2>Pedido enviado.</h2>
-  <p>Aguarde até ser chamado.</p>
-  <button class="btn" onclick="location.reload()">Novo pedido</button>
-</section>
+    <div id="screen-card" class="screen">
+        <h1>Cartão</h1>
+        <div style="background: #fff; color: #000; padding: 30px; border-radius: 15px; text-align: center;">
+            <p style="font-size: 1.5rem;">O pagamento será realizado diretamente no balcão.</p>
+            <p>Aceitamos Débito, Crédito e VR.</p>
+        </div>
+        <br>
+        <button class="btn-main" onclick="finishOrder()">Entendido</button>
+    </div>
 
-<script>
-function salvarNome(){
-  nomeCliente.innerText=nomeInput.value;
-  nomeTela.classList.add("hidden");
-  menuTela.classList.remove("hidden");
-}
-function abrirPagamento(){
-  menuTela.classList.add("hidden");
-  pagamentoTela.classList.remove("hidden");
-}
-function dinheiro(){
-  pixBox.classList.add("hidden");
-  trocoBox.classList.remove("hidden");
-}
-function cartao(){
-  finalizar();
-}
-function pix(){
-  trocoBox.classList.add("hidden");
-  pixBox.classList.remove("hidden");
-}
-function finalizar(){
-  pagamentoTela.classList.add("hidden");
-  finalTela.classList.remove("hidden");
-}
-</script>
+    <div id="screen-finish" class="screen text-center">
+        <img src="https://i.postimg.cc/C1nrB0SK/Logo.png" class="logo">
+        <h1 id="final-thanks"></h1>
+        <div style="font-size: 2rem; margin: 20px;">
+            🛒 Retirar pedido no balcão.<br>
+            Valor Final: <span id="final-total"></span>
+        </div>
+        <p>Aguarde até ser chamado pelo nome.</p>
+        <br>
+        <button class="btn-main" onclick="resetSystem()">FAZER NOVO PEDIDO</button>
+    </div>
 
+    <script>
+        // Dados do Sistema
+        let order = {
+            client: "",
+            product: "",
+            basePrice: 0,
+            addons: [],
+            total: 0,
+            freeCount: 0
+        };
+
+        const freeAddonsList = ["Confete M&M's", "Leite em Pó", "Chocobol", "Cobertura de Chocolate", "Cobertura de Morango", "Amendoim", "Sucrilhos", "Gotas de Oreo", "Granola", "Bis Preto", "Bis Branco", "Bala de Goma", "Marshmallow", "Fruta - Banana", "Fruta - Morango", "Fruta - Uva", "Fruta - Abacaxi"];
+        const paidAddonsList = [
+            { name: "Stikadinho", price: 5.00 },
+            { name: "Sorvete", price: 3.00 },
+            { name: "OvoMaltine", price: 3.00 },
+            { name: "Ouro Branco", price: 4.00 },
+            { name: "Nutella", price: 7.00 },
+            { name: "Kit Kat", price: 5.00 },
+            { name: "Creme de Pistache", price: 5.00 },
+            { name: "Creme de OvoMaltine", price: 5.00 },
+            { name: "Creme de Oreo", price: 5.00 },
+            { name: "Creme de Morango", price: 5.00 },
+            { name: "Creme de Maracujá", price: 5.00 },
+            { name: "Creme de Leitinho", price: 5.00 },
+            { name: "Creme de KitKat", price: 5.00 },
+            { name: "Creme de Avelã", price: 5.00 },
+            { name: "Creme de amendoim", price: 5.00 },
+            { name: "Creme Fini Beijos", price: 4.00 },
+            { name: "Creme Fini Banana", price: 4.00 },
+            { name: "Creme Fini Granola", price: 4.00 }
+        ];
+
+        // Navegação
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        // Fluxo
+        function startOrder() {
+            const name = document.getElementById('input-client-name').value;
+            if(!name) return alert("Por favor, digite seu nome.");
+            order.client = name;
+            document.getElementById('user-display-menu').innerText = "Olá, " + name + "!";
+            document.getElementById('user-display-addons').innerText = "Pedido de: " + name;
+            showScreen('screen-menu');
+        }
+
+        function selectProduct(name, price) {
+            order.product = name;
+            order.basePrice = price;
+            renderAddons();
+            updateTotal();
+            showScreen('screen-addons');
+        }
+
+        function renderAddons() {
+            const freeDiv = document.getElementById('list-free-addons');
+            const paidDiv = document.getElementById('list-paid-addons');
+            const addonImg = "https://i.postimg.cc/LsXsLCJr/Adicionais.png";
+
+            freeDiv.innerHTML = freeAddonsList.map(item => `
+                <div class="addon-item">
+                    <div class="addon-controls">
+                        <button class="btn-qty" onclick="changeAddon('${item}', -1, 0)">-</button>
+                        <span class="addon-qty" id="qty-${item}">0</span>
+                        <button class="btn-qty" id="plus-${item}" onclick="changeAddon('${item}', 1, 0)">+</button>
+                    </div>
+                    <div class="addon-name">${item}</div>
+                    <img src="${addonImg}" class="addon-img-small">
+                </div>
+            `).join('');
+
+            paidDiv.innerHTML = paidAddonsList.map(item => `
+                <div class="addon-item">
+                    <div class="addon-controls">
+                        <button class="btn-qty" onclick="changeAddon('${item.name}', -1, ${item.price})">-</button>
+                        <span class="addon-qty" id="qty-${item.name}">0</span>
+                        <button class="btn-qty" onclick="changeAddon('${item.name}', 1, ${item.price})">+</button>
+                    </div>
+                    <div class="addon-name">${item.name}</div>
+                    <div class="addon-price">R$ ${item.price.toFixed(2)}</div>
+                    <img src="${addonImg}" class="addon-img-small">
+                </div>
+            `).join('');
+        }
+
+        function changeAddon(name, delta, price) {
+            const qtySpan = document.getElementById(`qty-${name}`);
+            let currentQty = parseInt(qtySpan.innerText);
+            
+            // Regra Grátis
+            if(price === 0) {
+                if(delta > 0 && order.freeCount >= 3) return;
+                if(delta < 0 && currentQty <= 0) return;
+                
+                currentQty += delta;
+                order.freeCount += delta;
+            } else {
+                // Regra Pagos
+                if(delta < 0 && currentQty <= 0) return;
+                currentQty += delta;
+            }
+
+            qtySpan.innerText = currentQty;
+            updateTotal();
+            
+            // Bloquear/Desbloquear botões de gratuitos
+            freeAddonsList.forEach(item => {
+                const btnPlus = document.getElementById(`plus-${item}`);
+                if(order.freeCount >= 3) {
+                    btnPlus.disabled = true;
+                } else {
+                    btnPlus.disabled = false;
+                }
+            });
+        }
+
+        function updateTotal() {
+            let extra = 0;
+            // Percorre pagos para somar
+            paidAddonsList.forEach(item => {
+                const q = parseInt(document.getElementById(`qty-${item.name}`).innerText) || 0;
+                extra += (q * item.price);
+            });
+            order.total = order.basePrice + extra;
+            const formatted = "R$ " + order.total.toFixed(2).replace('.', ',');
+            document.getElementById('display-total').innerText = formatted;
+            document.getElementById('display-total-pay').innerText = formatted;
+            document.getElementById('final-total').innerText = formatted;
+        }
+
+        function goToPayment() {
+            showScreen('screen-payment');
+        }
+
+        function payMethod(type) {
+            if(type === 'pix') showScreen('screen-pix');
+            if(type === 'money') showScreen('screen-money');
+            if(type === 'card') showScreen('screen-card');
+        }
+
+        function finishOrder() {
+            // Aqui simularia o envio para a impressora/cozinha
+            console.log("PEDIDO ENVIADO PARA COZINHA:", order);
+            
+            document.getElementById('final-thanks').innerText = `Pedido enviado, ${order.client}.`;
+            showScreen('screen-finish');
+        }
+
+        function resetSystem() {
+            order = { client: "", product: "", basePrice: 0, addons: [], total: 0, freeCount: 0 };
+            document.getElementById('input-client-name').value = "";
+            document.getElementById('input-change').value = "";
+            document.getElementById('change-box').classList.add('hidden');
+            showScreen('screen-name');
+        }
+    </script>
 </body>
 </html>
