@@ -16,8 +16,6 @@ body {
 .screen { display: none; padding: 20px; }
 .active { display: block; }
 
-h2, h3 { margin-top: 10px; }
-
 button {
   padding: 14px;
   font-size: 18px;
@@ -45,18 +43,6 @@ button {
   border-radius: 10px;
 }
 
-.flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.qty button {
-  width: 45px;
-  height: 45px;
-  font-size: 22px;
-}
-
 .addons {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -76,45 +62,36 @@ button {
   object-fit: cover;
   border-radius: 8px;
 }
-
-.addon button {
-  margin-top: 5px;
-  width: 100%;
-}
 </style>
 </head>
 
 <body>
 
-<!-- SPLASH -->
-<div id="splash" class="screen active" style="text-align:center;">
+<!-- SPLASH + NOME -->
+<div id="start" class="screen active" style="text-align:center;">
   <img src="https://i.postimg.cc/Vkvm5SrB/The-Kings-Logo.png" width="220"><br><br>
-  <p>Carregando...</p>
-</div>
 
-<!-- NOME -->
-<div id="nameScreen" class="screen">
-  <h2>Qual é o seu nome?</h2>
-  <input id="clientName" placeholder="Digite seu nome"
-    style="width:100%;padding:15px;font-size:18px;border-radius:8px;border:none;">
-  <button class="primary" onclick="saveName()">Continuar</button>
+  <input id="clientName"
+    placeholder="Digite seu nome"
+    style="width:90%;padding:15px;font-size:18px;border-radius:8px;border:none;"><br>
+
+  <button class="primary" onclick="goMenu()">Começar pedido</button>
 </div>
 
 <!-- CARDÁPIO -->
-<div id="menuScreen" class="screen">
+<div id="menu" class="screen">
   <h2>Escolha seu Açaí</h2>
   <div id="products"></div>
 </div>
 
 <!-- PRODUTO -->
-<div id="productScreen" class="screen">
+<div id="product" class="screen">
   <h2 id="productName"></h2>
 
-  <div class="flex qty">
-    <button onclick="changeQty(-1)">−</button>
-    <strong id="qty">1</strong>
-    <button onclick="changeQty(1)">+</button>
-  </div>
+  <p>Quantidade:</p>
+  <button onclick="qty--,update()">−</button>
+  <strong id="qty">1</strong>
+  <button onclick="qty++,update()">+</button>
 
   <h3>Adicionais Gratuitos (3)</h3>
   <p id="freeCount">0 / 3</p>
@@ -128,7 +105,7 @@ button {
 </div>
 
 <!-- PAGAMENTO -->
-<div id="paymentScreen" class="screen">
+<div id="payment" class="screen">
   <h2>Total: R$ <span id="finalTotal"></span></h2>
   <button class="primary" onclick="payPix()">Pix</button>
   <button class="primary" onclick="finish()">Dinheiro</button>
@@ -136,7 +113,7 @@ button {
 </div>
 
 <!-- PIX -->
-<div id="pixScreen" class="screen">
+<div id="pix" class="screen">
   <h2>Pix - R$ <span id="pixValue"></span></h2>
   <img src="https://i.postimg.cc/xCt0pLWD/QR-CODE.jpg" width="220"><br><br>
   <strong>gl_oficial@jim.com</strong>
@@ -144,144 +121,116 @@ button {
 </div>
 
 <!-- FINAL -->
-<div id="finalScreen" class="screen" style="text-align:center;">
+<div id="final" class="screen" style="text-align:center;">
   <h2 id="thanks"></h2>
   <p>Pedido enviado.<br>Aguarde até ser chamado.</p>
-  <button class="primary" onclick="resetAll()">Fazer novo pedido</button>
+  <button class="primary" onclick="location.reload()">Fazer novo pedido</button>
 </div>
 
 <script>
-/* ================== DADOS ================== */
-
-const products = [
-  { name:"Barca de Açaí Média", price:35, image:"LINK_DA_IMAGEM_AQUI" },
-  { name:"Copo 300ml", price:13, image:"LINK_DA_IMAGEM_AQUI" },
-  { name:"Copo 550ml", price:16, image:"LINK_DA_IMAGEM_AQUI" },
-  { name:"Copo 700ml", price:21, image:"LINK_DA_IMAGEM_AQUI" }
+/* ===== DADOS ===== */
+var products = [
+  {name:"Barca de Açaí Média",price:35,image:"LINK_DA_IMAGEM_AQUI"},
+  {name:"Copo 300ml",price:13,image:"LINK_DA_IMAGEM_AQUI"},
+  {name:"Copo 550ml",price:16,image:"LINK_DA_IMAGEM_AQUI"},
+  {name:"Copo 700ml",price:21,image:"LINK_DA_IMAGEM_AQUI"}
 ];
 
-const freeAddons = [
+var freeAddons = [
   {name:"Confete",image:"LINK_DA_IMAGEM_AQUI"},
   {name:"Leite em Pó",image:"LINK_DA_IMAGEM_AQUI"},
-  {name:"Chocobol",image:"LINK_DA_IMAGEM_AQUI"},
-  {name:"Granola",image:"LINK_DA_IMAGEM_AQUI"},
-  {name:"Marshmallow",image:"LINK_DA_IMAGEM_AQUI"},
   {name:"Banana",image:"LINK_DA_IMAGEM_AQUI"},
-  {name:"Morango",image:"LINK_DA_IMAGEM_AQUI"},
-  {name:"Uva",image:"LINK_DA_IMAGEM_AQUI"},
-  {name:"Abacaxi",image:"LINK_DA_IMAGEM_AQUI"}
+  {name:"Morango",image:"LINK_DA_IMAGEM_AQUI"}
 ];
 
-const paidAddons = [
+var paidAddons = [
   {name:"Nutella",price:7,image:"LINK_DA_IMAGEM_AQUI"},
-  {name:"Sorvete",price:3,image:"LINK_DA_IMAGEM_AQUI"},
-  {name:"Kit Kat",price:5,image:"LINK_DA_IMAGEM_AQUI"},
-  {name:"Ovomaltine",price:3,image:"LINK_DA_IMAGEM_AQUI"}
+  {name:"Sorvete",price:3,image:"LINK_DA_IMAGEM_AQUI"}
 ];
 
-/* ================== ESTADO ================== */
+/* ===== ESTADO ===== */
+var client="", current=0, qty=1, freeUsed=0, paidTotal=0;
 
-let client="", product=null, qty=1, freeUsed=0, paidTotal=0;
-
-/* ================== FLUXO ================== */
-
-setTimeout(()=>show("nameScreen"),2000);
-
+/* ===== FUNÇÕES ===== */
 function show(id){
-  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  var s=document.getElementsByClassName("screen");
+  for(var i=0;i<s.length;i++) s[i].classList.remove("active");
   document.getElementById(id).classList.add("active");
 }
 
-function saveName(){
-  client=clientName.value.trim();
-  if(!client) return alert("Digite seu nome");
+function goMenu(){
+  client=document.getElementById("clientName").value.trim();
+  if(!client){ alert("Digite seu nome"); return; }
   loadProducts();
-  show("menuScreen");
+  show("menu");
 }
 
 function loadProducts(){
-  productsDiv=document.getElementById("products");
-  productsDiv.innerHTML="";
-  products.forEach(p=>{
-    productsDiv.innerHTML+=`
-      <div class="card">
-        <img src="${p.image}">
-        <h3>${p.name}</h3>
-        <p>R$ ${p.price.toFixed(2)}</p>
-        <button onclick='selectProduct(${JSON.stringify(p)})'>Selecionar</button>
-      </div>`;
-  });
+  var div=document.getElementById("products");
+  div.innerHTML="";
+  for(var i=0;i<products.length;i++){
+    div.innerHTML+=
+      '<div class="card">'+
+      '<img src="'+products[i].image+'">'+
+      '<h3>'+products[i].name+'</h3>'+
+      '<p>R$ '+products[i].price.toFixed(2)+'</p>'+
+      '<button onclick="selectProduct('+i+')">Selecionar</button>'+
+      '</div>';
+  }
 }
 
-function selectProduct(p){
-  product=p; qty=1; freeUsed=0; paidTotal=0;
-  productName.innerText=p.name;
-  document.getElementById("qty").innerText=qty;
+function selectProduct(i){
+  current=i; qty=1; freeUsed=0; paidTotal=0;
+  document.getElementById("productName").innerText=products[i].name;
   loadAddons();
-  updateTotal();
-  show("productScreen");
-}
-
-function changeQty(v){
-  if(qty+v<1)return;
-  qty+=v;
-  document.getElementById("qty").innerText=qty;
-  updateTotal();
+  update();
+  show("product");
 }
 
 function loadAddons(){
-  freeAddonsDiv.innerHTML="";
-  paidAddonsDiv.innerHTML="";
+  var f=document.getElementById("freeAddons");
+  var p=document.getElementById("paidAddons");
+  f.innerHTML=""; p.innerHTML="";
   document.getElementById("freeCount").innerText="0 / 3";
 
-  freeAddons.forEach(a=>{
-    let el=document.createElement("div");
-    el.className="addon";
-    el.innerHTML=`<img src="${a.image}"><p>${a.name}</p><button>Adicionar</button>`;
-    el.querySelector("button").onclick=()=>{
-      if(freeUsed>=3)return;
-      freeUsed++;
-      el.querySelector("button").disabled=true;
-      document.getElementById("freeCount").innerText=freeUsed+" / 3";
-    };
-    freeAddonsDiv.appendChild(el);
-  });
+  for(var i=0;i<freeAddons.length;i++){
+    f.innerHTML+='<div class="addon"><img src="'+freeAddons[i].image+'"><p>'+freeAddons[i].name+'</p><button onclick="addFree(this)">Adicionar</button></div>';
+  }
 
-  paidAddons.forEach(a=>{
-    let el=document.createElement("div");
-    el.className="addon";
-    el.innerHTML=`<img src="${a.image}"><p>${a.name}<br>R$ ${a.price}</p><button>+</button>`;
-    el.querySelector("button").onclick=()=>{
-      paidTotal+=a.price;
-      updateTotal();
-    };
-    paidAddonsDiv.appendChild(el);
-  });
+  for(var j=0;j<paidAddons.length;j++){
+    p.innerHTML+='<div class="addon"><img src="'+paidAddons[j].image+'"><p>'+paidAddons[j].name+' R$ '+paidAddons[j].price+'</p><button onclick="addPaid('+paidAddons[j].price+')">+</button></div>';
+  }
 }
 
-function updateTotal(){
-  let total=(product.price*qty)+paidTotal;
-  document.getElementById("total").innerText=total.toFixed(2);
+function addFree(btn){
+  if(freeUsed>=3) return;
+  freeUsed++; btn.disabled=true;
+  document.getElementById("freeCount").innerText=freeUsed+" / 3";
+}
+
+function addPaid(v){ paidTotal+=v; update(); }
+
+function update(){
+  if(qty<1) qty=1;
+  document.getElementById("qty").innerText=qty;
+  var t=(products[current].price*qty)+paidTotal;
+  document.getElementById("total").innerText=t.toFixed(2);
 }
 
 function goPayment(){
-  finalTotal.innerText=document.getElementById("total").innerText;
-  show("paymentScreen");
+  document.getElementById("finalTotal").innerText=document.getElementById("total").innerText;
+  show("payment");
 }
 
 function payPix(){
-  pixValue.innerText=document.getElementById("total").innerText;
-  show("pixScreen");
+  document.getElementById("pixValue").innerText=document.getElementById("total").innerText;
+  show("pix");
 }
 
 function finish(){
-  thanks.innerText=`Obrigado, ${client}!`;
-  show("finalScreen");
-  setTimeout(()=>window.print(),500);
-}
-
-function resetAll(){
-  location.reload();
+  document.getElementById("thanks").innerText="Obrigado, "+client+"!";
+  show("final");
+  setTimeout(function(){ window.print(); },500);
 }
 </script>
 
