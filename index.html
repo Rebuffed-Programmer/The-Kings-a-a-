@@ -2,10 +2,9 @@
 <html lang="pt-br">
 <head>
     <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="The Kings">
-<link rel="apple-touch-icon" href="https://i.postimg.cc/C1nrB0SK/Logo.png">
-    
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="The Kings">
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/C1nrB0SK/Logo.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>The Kings - Totem</title>
@@ -13,9 +12,9 @@
         :root {
             --cor-fundo: #2b2b2b;
             --cor-card: #3d3d3d;
-            --cor-primaria: #f5a623; /* Tom Burger King */
+            --cor-primaria: #f5a623; 
             --cor-texto: #ffffff;
-            --cor-sucesso: #4caf50;
+            --cor-sucesso: #28a745;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -26,11 +25,10 @@
             color: var(--cor-texto);
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Evita scroll indesejado no totem */
+            overflow: hidden; 
             height: 100vh;
         }
 
-        /* Estrutura de Telas */
         .screen {
             display: none;
             flex-direction: column;
@@ -42,11 +40,9 @@
         }
 
         .active { display: flex; }
-
-        .logo { width: 200px; margin-bottom: 10px; }
+        .logo { width: 150px; margin-bottom: 10px; }
         .user-name-display { font-size: 1.2rem; color: var(--cor-primaria); font-weight: bold; margin-bottom: 20px; }
 
-        /* Inputs e Botões */
         input[type="text"], input[type="number"] {
             padding: 20px;
             font-size: 1.5rem;
@@ -60,8 +56,8 @@
         .btn-main {
             background-color: var(--cor-primaria);
             color: #000;
-            padding: 25px 50px;
-            font-size: 1.5rem;
+            padding: 20px 40px;
+            font-size: 1.3rem;
             font-weight: bold;
             border: none;
             border-radius: 10px;
@@ -69,87 +65,49 @@
             text-transform: uppercase;
         }
 
-        /* Menu de Produtos (Cards Grandes) */
-        .card-container { width: 100%; max-width: 800px; }
+        /* Estilo das Bandeiras de Cartão */
+        .flags-section { width: 95%; background: #333; padding: 10px; border-radius: 10px; margin-bottom: 10px; }
+        .flags-title { color: var(--cor-primaria); font-size: 1rem; margin-bottom: 8px; text-transform: uppercase; border-bottom: 1px solid #555; padding-bottom: 5px; text-align: left; }
+        .flags-grid { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+        .flag-card { width: 65px; height: 40px; background: white; border-radius: 5px; display: flex; align-items: center; justify-content: center; padding: 2px; }
+        .flag-card img { max-width: 90%; max-height: 90%; object-fit: contain; }
+
+        .btn-finalizar-topo { 
+            background-color: var(--cor-sucesso) !important; 
+            color: white !important; 
+            width: 100%; max-width: 450px; 
+            padding: 20px !important;
+            font-size: 1.4rem !important;
+            font-weight: bold !important;
+            border-radius: 12px !important;
+            margin: 15px 0 !important;
+            box-shadow: 0px 4px 0px #1e7e34 !important;
+        }
+
+        /* Menu e Cards */
         .product-card {
             background: var(--cor-card);
             border-radius: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 20px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: 0.2s;
-        }
-        .product-card:active { border-color: var(--cor-primaria); background: #4d4d4d; }
-        .product-info { flex: 1; }
-        .product-info h2 { margin: 0; font-size: 1.8rem; }
-        .product-info p { margin: 5px 0 0; color: #ccc; }
-        .product-img { width: 120px; height: 120px; border-radius: 10px; object-fit: cover; margin-left: 20px; }
-
-        /* Lista de Adicionais */
-        .addon-item {
-            background: var(--cor-card);
+            padding: 15px;
             width: 100%;
             max-width: 800px;
-            margin-bottom: 10px;
-            padding: 15px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
         }
-        .addon-controls { display: flex; align-items: center; gap: 15px; flex: 1; }
-        .btn-qty {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: none;
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: var(--cor-primaria);
-            cursor: pointer;
-        }
-        .btn-qty:disabled { background: #666; opacity: 0.5; }
-        .addon-qty { font-size: 1.5rem; min-width: 30px; text-align: center; }
-        .addon-name { flex: 2; font-size: 1.2rem; margin-left: 15px; }
-        .addon-price { color: var(--cor-primaria); font-weight: bold; margin-right: 15px; }
-        .addon-img-small { width: 80px; height: 80px; border-radius: 5px; object-fit: cover; }
+        .product-info { flex: 1; }
+        .product-img { width: 100px; height: 100px; border-radius: 10px; object-fit: cover; }
 
-        /* Footer com Total */
-        .footer-bar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: #1a1a1a;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 3px solid var(--cor-primaria);
-        }
-        .total-text { font-size: 1.5rem; font-weight: bold; }
+        .addon-item { background: var(--cor-card); width: 100%; max-width: 800px; margin-bottom: 8px; padding: 10px; border-radius: 10px; display: flex; align-items: center; }
+        .btn-qty { width: 45px; height: 45px; border-radius: 50%; border: none; font-size: 1.5rem; background: var(--cor-primaria); }
 
-        /* Pagamento */
-        .pay-grid { display: flex; gap: 20px; margin-top: 40px; }
-        .btn-pay {
-            flex: 1;
-            padding: 40px 20px;
-            font-size: 1.5rem;
-            background: var(--cor-card);
-            color: white;
-            border: 2px solid var(--cor-primaria);
-            border-radius: 15px;
-            text-align: center;
-        }
-        .btn-pay:active { background: var(--cor-primaria); color: black; }
-
-        .qr-code { width: 300px; border-radius: 10px; background: white; padding: 10px; margin: 20px 0; }
+        .footer-bar { position: fixed; bottom: 0; width: 100%; background: #1a1a1a; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-top: 3px solid var(--cor-primaria); }
         
-        /* Utilitários */
+        .pay-grid { display: flex; gap: 15px; width: 100%; max-width: 600px; }
+        .btn-pay { flex: 1; padding: 25px 10px; background: var(--cor-card); border: 2px solid var(--cor-primaria); border-radius: 15px; text-align: center; color: white; display: flex; flex-direction: column; align-items: center; }
+        .btn-pay img { width: 40px; margin-bottom: 5px; }
+
         .hidden { display: none; }
-        .text-center { text-align: center; }
     </style>
 </head>
 <body>
@@ -166,31 +124,17 @@
         <img src="https://i.postimg.cc/C1nrB0SK/Logo.png" class="logo">
         <div id="user-display-menu" class="user-name-display"></div>
         <h1>Escolha seu Açaí</h1>
-        
-        <div class="card-container">
-            <div class="product-card" onclick="selectProduct('Copo de Açaí 300ml', 15.00)">
-                <div class="product-info">
-                    <h2>Copo 300ml</h2>
-                    <p>R$ 13,00</p>
-                </div>
-                <img src="https://i.postimg.cc/wj5N0GT8/Acai-300.jpg" class="product-img">
-            </div>
-
-            <div class="product-card" onclick="selectProduct('Copo de Açaí 500ml', 20.00)">
-                <div class="product-info">
-                    <h2>Copo 500ml</h2>
-                    <p>R$ 16,00</p>
-                </div>
-                <img src="https://i.postimg.cc/wj5N0GT8/Acai-300.jpg" class="product-img" style="filter: hue-rotate(45deg);">
-            </div>
-
-            <div class="product-card" onclick="selectProduct('Copo de Açaí 700ml', 25.00)">
-                <div class="product-info">
-                    <h2>Copo 700ml</h2>
-                    <p>R$ 21,00</p>
-                </div>
-                <img src="https://i.postimg.cc/wj5N0GT8/Acai-300.jpg" class="product-img" style="filter: hue-rotate(90deg);">
-            </div>
+        <div class="product-card" onclick="selectProduct('Copo 300ml', 13.00)">
+            <div class="product-info"><h2>Copo 300ml</h2><p>R$ 13,00</p></div>
+            <img src="https://i.postimg.cc/wj5N0GT8/Acai-300.jpg" class="product-img">
+        </div>
+        <div class="product-card" onclick="selectProduct('Copo 500ml', 16.00)">
+            <div class="product-info"><h2>Copo 500ml</h2><p>R$ 16,00</p></div>
+            <img src="https://i.postimg.cc/wj5N0GT8/Acai-300.jpg" class="product-img" style="filter: hue-rotate(45deg);">
+        </div>
+        <div class="product-card" onclick="selectProduct('Copo 700ml', 21.00)">
+            <div class="product-info"><h2>Copo 700ml</h2><p>R$ 21,00</p></div>
+            <img src="https://i.postimg.cc/wj5N0GT8/Acai-300.jpg" class="product-img" style="filter: hue-rotate(90deg);">
         </div>
     </div>
 
@@ -198,122 +142,110 @@
         <div class="user-name-display" id="user-display-addons"></div>
         <h3>Adicionais Gratuitos (Máx 3)</h3>
         <div id="list-free-addons"></div>
-        
-        <h3 style="margin-top: 30px;">Adicionais Pagos</h3>
+        <h3 style="margin-top: 20px;">Adicionais Pagos</h3>
         <div id="list-paid-addons"></div>
-
         <div class="footer-bar">
-            <div class="total-text">Total: <span id="display-total">R$ 0,00</span></div>
-            <button class="btn-main" onclick="goToPayment()">Avançar</button>
+            <div style="font-size: 1.4rem;">Total: <span id="display-total">R$ 0,00</span></div>
+            <button class="btn-main" onclick="showScreen('screen-payment')">Avançar</button>
         </div>
     </div>
 
     <div id="screen-payment" class="screen">
+        <img src="https://i.postimg.cc/C1nrB0SK/Logo.png" class="logo">
         <h1>Pagamento</h1>
-        <div class="total-text" style="font-size: 3rem; color: var(--cor-primaria);">
-            Total: <span id="display-total-pay">R$ 0,00</span>
-        </div>
-        <p>Escolha a forma de pagamento:</p>
-
+        <div id="display-total-pay" style="font-size: 2.5rem; color: var(--cor-primaria); margin-bottom: 20px;">R$ 0,00</div>
         <div class="pay-grid">
-            <div class="btn-pay" onclick="payMethod('money')">💵<br>Dinheiro</div>
-            <div class="btn-pay" onclick="payMethod('card')">💳<br>Cartão</div>
-            <div class="btn-pay" onclick="payMethod('pix')">🔁<br>Pix</div>
+            <div class="btn-pay" onclick="showScreen('screen-money')">💵<br>Dinheiro</div>
+            <div class="btn-pay" onclick="showScreen('screen-card')">💳<br>Cartão</div>
+            <div class="btn-pay" onclick="showScreen('screen-pix')">
+                <img src="https://i.postimg.cc/rp2wY1F3/Pix.png"><br>Pix
+            </div>
         </div>
     </div>
 
     <div id="screen-pix" class="screen">
         <h1>Pagamento via PIX</h1>
-        <img src="https://i.postimg.cc/xCt0pLWD/QR-CODE.jpg" class="qr-code">
-        <p>Chave Pix: <strong>gl_oficial@jim.com</strong></p>
-        <p>Aponte a câmera ou use o "Copia e Cola"</p>
-        <button class="btn-main" onclick="finishOrder()">Já paguei / Confirmar</button>
+        <img src="https://i.postimg.cc/xCt0pLWD/QR-CODE.jpg" style="width: 250px; background: white; padding: 10px; border-radius: 10px;">
+        <p>Chave: <strong>gl_oficial@jim.com</strong></p>
+        <button class="btn-main" onclick="finishOrder()">Confirmar Pagamento</button>
     </div>
 
     <div id="screen-money" class="screen">
-        <h1>Pagamento em Dinheiro</h1>
-        <p>Você precisa de troco?</p>
-        <div style="display: flex; gap: 20px;">
-            <button class="btn-main" onclick="document.getElementById('change-box').classList.remove('hidden')">SIM</button>
-            <button class="btn-main" style="background: #999;" onclick="finishOrder()">NÃO</button>
-        </div>
-        <div id="change-box" class="hidden" style="margin-top: 20px;">
-            <p>Troco para quanto?</p>
-            <input type="number" id="input-change" placeholder="Ex: 50">
-            <br>
+        <h1>Dinheiro</h1>
+        <p>Precisa de troco?</p>
+        <button class="btn-main" onclick="document.getElementById('change-box').classList.remove('hidden')">SIM</button>
+        <button class="btn-main" style="background: #666; margin-top: 10px;" onclick="finishOrder()">NÃO</button>
+        <div id="change-box" class="hidden">
+            <input type="number" id="input-change" placeholder="Troco para quanto?">
             <button class="btn-main" onclick="finishOrder()">Confirmar</button>
         </div>
     </div>
 
     <div id="screen-card" class="screen">
-        <h1>Cartão</h1>
-        <div style="background: #fff; color: #000; padding: 30px; border-radius: 15px; text-align: center;">
-            <p style="font-size: 1.5rem;">O pagamento será realizado diretamente no balcão.</p>
-            <p>Aceitamos Débito, Crédito e VR.</p>
+        <img src="https://i.postimg.cc/C1nrB0SK/Logo.png" class="logo" style="width:100px;">
+        <h1 style="margin: 5px 0;">Cartões que aceitamos</h1>
+        
+        <button class="btn-finalizar-topo" onclick="finishOrder()">
+            FINALIZAR E PAGAR NO BALCÃO
+        </button>
+
+        <div class="flags-section">
+            <div class="flags-title">Débito e Crédito</div>
+            <div class="flags-grid">
+                <div class="flag-card"><img src="https://i.postimg.cc/0ywNfWx7/MasterCard.png"></div>
+                <div class="flag-card"><img src="https://i.postimg.cc/0ywNfWxc/Visa.png"></div>
+                <div class="flag-card"><img src="https://i.postimg.cc/GpnmSFhX/ELO.jpg"></div>
+                <div class="flag-card"><img src="https://i.postimg.cc/htdGrygy/American_express.png"></div>
+                <div class="flag-card"><img src="https://i.postimg.cc/dVy0BHvn/Hiper.png"></div>
+                <div class="flag-card"><img src="https://i.postimg.cc/XYCv8H3R/Hipercard.png"></div>
+            </div>
         </div>
-        <br>
-        <button class="btn-main" onclick="finishOrder()">Entendido</button>
+
+        <div class="flags-section">
+            <div class="flags-title">Alimentação e Carteiras</div>
+            <div class="flags-grid">
+                <div class="flag-card"><img src="https://i.postimg.cc/s2Cg0YgV/Ticket.png"></div>
+                <div class="flag-card"><img src="https://i.postimg.cc/Dz3wYrw7/VR.png"></div>
+                <div class="flag-card"><img src="https://i.postimg.cc/hGRt3Ltq/Alelo.png"></div>
+                <div class="flag-card"><img src="https://i.postimg.cc/1z03x88s/Mercado_Pago.png"></div>
+                <div class="flag-card"><img src="https://i.postimg.cc/VN9kyJJ1/PicPay.png"></div>
+            </div>
+        </div>
     </div>
 
-    <div id="screen-finish" class="screen text-center">
+    <div id="screen-finish" class="screen">
         <img src="https://i.postimg.cc/C1nrB0SK/Logo.png" class="logo">
         <h1 id="final-thanks"></h1>
-        <div style="font-size: 2rem; margin: 20px;">
-            🛒 Retirar pedido no balcão.<br>
-            Valor Final: <span id="final-total"></span>
+        <div style="font-size: 2rem; text-align: center;">
+            🛒 Retire no balcão.<br>
+            Total: <span id="final-total"></span>
         </div>
-        <p>Aguarde até ser chamado pelo nome.</p>
-        <br>
-        <button class="btn-main" onclick="resetSystem()">FAZER NOVO PEDIDO</button>
+        <button class="btn-main" style="margin-top: 30px;" onclick="resetSystem()">Novo Pedido</button>
     </div>
 
     <script>
-        // Dados do Sistema
-        let order = {
-            client: "",
-            product: "",
-            basePrice: 0,
-            addons: [],
-            total: 0,
-            freeCount: 0
-        };
+        let order = { client: "", product: "", basePrice: 0, total: 0, freeCount: 0 };
 
-        const freeAddonsList = ["Confete M&M's", "Leite em Pó", "Chocobol", "Cobertura de Chocolate", "Cobertura de Morango", "Amendoim", "Sucrilhos", "Gotas de Oreo", "Granola", "Bis Preto", "Bis Branco", "Bala de Goma", "Marshmallow", "Fruta - Banana", "Fruta - Morango", "Fruta - Uva", "Fruta - Abacaxi"];
+        const freeAddonsList = ["Leite em Pó", "Chocobol", "Granola", "Confete", "Amendoim", "Banana", "Morango"];
         const paidAddonsList = [
-            { name: "Stikadinho", price: 5.00 },
-            { name: "Sorvete", price: 3.00 },
-            { name: "OvoMaltine", price: 3.00 },
-            { name: "Ouro Branco", price: 4.00 },
             { name: "Nutella", price: 7.00 },
             { name: "Kit Kat", price: 5.00 },
-            { name: "Creme de Pistache", price: 5.00 },
-            { name: "Creme de OvoMaltine", price: 5.00 },
-            { name: "Creme de Oreo", price: 5.00 },
-            { name: "Creme de Morango", price: 5.00 },
-            { name: "Creme de Maracujá", price: 5.00 },
-            { name: "Creme de Leitinho", price: 5.00 },
-            { name: "Creme de KitKat", price: 5.00 },
-            { name: "Creme de Avelã", price: 5.00 },
-            { name: "Creme de amendoim", price: 5.00 },
-            { name: "Creme Fini Beijos", price: 4.00 },
-            { name: "Creme Fini Banana", price: 4.00 },
-            { name: "Creme Fini Granola", price: 4.00 }
+            { name: "Sorvete", price: 3.00 },
+            { name: "Stikadinho", price: 5.00 }
         ];
 
-        // Navegação
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             window.scrollTo(0,0);
         }
 
-        // Fluxo
         function startOrder() {
             const name = document.getElementById('input-client-name').value;
-            if(!name) return alert("Por favor, digite seu nome.");
+            if(!name) return alert("Digite seu nome.");
             order.client = name;
             document.getElementById('user-display-menu').innerText = "Olá, " + name + "!";
-            document.getElementById('user-display-addons').innerText = "Pedido de: " + name;
+            document.getElementById('user-display-addons').innerText = "Pedido: " + name;
             showScreen('screen-menu');
         }
 
@@ -326,390 +258,69 @@
         }
 
         function renderAddons() {
-            const freeDiv = document.getElementById('list-free-addons');
-            const paidDiv = document.getElementById('list-paid-addons');
-            const addonImg = "https://i.postimg.cc/LsXsLCJr/Adicionais.png";
-
-            freeDiv.innerHTML = freeAddonsList.map(item => `
+            const imgUrl = "https://i.postimg.cc/LsXsLCJr/Adicionais.png";
+            document.getElementById('list-free-addons').innerHTML = freeAddonsList.map(item => `
                 <div class="addon-item">
-                    <div class="addon-controls">
+                    <div style="display:flex; align-items:center; gap:10px; flex:1;">
                         <button class="btn-qty" onclick="changeAddon('${item}', -1, 0)">-</button>
-                        <span class="addon-qty" id="qty-${item}">0</span>
+                        <span id="qty-${item}">0</span>
                         <button class="btn-qty" id="plus-${item}" onclick="changeAddon('${item}', 1, 0)">+</button>
                     </div>
-                    <div class="addon-name">${item}</div>
-                    <img src="${addonImg}" class="addon-img-small">
+                    <div style="flex:2">${item}</div>
+                    <img src="${imgUrl}" style="width:50px">
                 </div>
             `).join('');
 
-            paidDiv.innerHTML = paidAddonsList.map(item => `
+            document.getElementById('list-paid-addons').innerHTML = paidAddonsList.map(item => `
                 <div class="addon-item">
-                    <div class="addon-controls">
+                    <div style="display:flex; align-items:center; gap:10px; flex:1;">
                         <button class="btn-qty" onclick="changeAddon('${item.name}', -1, ${item.price})">-</button>
-                        <span class="addon-qty" id="qty-${item.name}">0</span>
+                        <span id="qty-${item.name}">0</span>
                         <button class="btn-qty" onclick="changeAddon('${item.name}', 1, ${item.price})">+</button>
                     </div>
-                    <div class="addon-name">${item.name}</div>
-                    <div class="addon-price">R$ ${item.price.toFixed(2)}</div>
-                    <img src="${addonImg}" class="addon-img-small">
+                    <div style="flex:2">${item.name} (R$ ${item.price})</div>
+                    <img src="${imgUrl}" style="width:50px">
                 </div>
             `).join('');
         }
 
         function changeAddon(name, delta, price) {
-            const qtySpan = document.getElementById(`qty-${name}`);
-            let currentQty = parseInt(qtySpan.innerText);
-            
-            // Regra Grátis
+            const span = document.getElementById(`qty-${name}`);
+            let qty = parseInt(span.innerText);
             if(price === 0) {
                 if(delta > 0 && order.freeCount >= 3) return;
-                if(delta < 0 && currentQty <= 0) return;
-                
-                currentQty += delta;
+                if(delta < 0 && qty <= 0) return;
+                qty += delta;
                 order.freeCount += delta;
             } else {
-                // Regra Pagos
-                if(delta < 0 && currentQty <= 0) return;
-                currentQty += delta;
+                if(delta < 0 && qty <= 0) return;
+                qty += delta;
             }
-
-            qtySpan.innerText = currentQty;
+            span.innerText = qty;
             updateTotal();
-            
-            // Bloquear/Desbloquear botões de gratuitos
-            freeAddonsList.forEach(item => {
-                const btnPlus = document.getElementById(`plus-${item}`);
-                if(order.freeCount >= 3) {
-                    btnPlus.disabled = true;
-                } else {
-                    btnPlus.disabled = false;
-                }
-            });
         }
 
         function updateTotal() {
             let extra = 0;
-            // Percorre pagos para somar
             paidAddonsList.forEach(item => {
                 const q = parseInt(document.getElementById(`qty-${item.name}`).innerText) || 0;
                 extra += (q * item.price);
             });
             order.total = order.basePrice + extra;
-            const formatted = "R$ " + order.total.toFixed(2).replace('.', ',');
-            document.getElementById('display-total').innerText = formatted;
-            document.getElementById('display-total-pay').innerText = formatted;
-            document.getElementById('final-total').innerText = formatted;
-        }
-
-        function goToPayment() {
-            showScreen('screen-payment');
-        }
-
-        function payMethod(type) {
-            if(type === 'pix') showScreen('screen-pix');
-            if(type === 'money') showScreen('screen-money');
-            if(type === 'card') showScreen('screen-card');
+            const fmt = "R$ " + order.total.toFixed(2).replace('.', ',');
+            document.getElementById('display-total').innerText = fmt;
+            document.getElementById('display-total-pay').innerText = fmt;
+            document.getElementById('final-total').innerText = fmt;
         }
 
         function finishOrder() {
-            // Aqui simularia o envio para a impressora/cozinha
-            console.log("PEDIDO ENVIADO PARA COZINHA:", order);
-            
-            document.getElementById('final-thanks').innerText = `Pedido enviado, ${order.client}.`;
+            document.getElementById('final-thanks').innerText = `Valeu, ${order.client}!`;
             showScreen('screen-finish');
         }
 
         function resetSystem() {
-            order = { client: "", product: "", basePrice: 0, addons: [], total: 0, freeCount: 0 };
-            document.getElementById('input-client-name').value = "";
-            document.getElementById('input-change').value = "";
-            document.getElementById('change-box').classList.add('hidden');
-            showScreen('screen-name');
+            location.reload(); // Forma mais segura de limpar tudo no iPad
         }
     </script>
-    <script>
-    // 1. TRAVAR ROLAGEM (IMPEDIR QUE A BARRA APAREÇA AO ARRASTAR)
-    document.addEventListener('touchmove', function(e) {
-        if (!e.target.closest('.screen')) { // Permite scroll apenas dentro das telas
-            e.preventDefault();
-        }
-    }, { passive: false });
-
-    // 2. LÓGICA DO SISTEMA THE KINGS
-    let pedido = {
-        cliente: "",
-        produto: "",
-        valorBase: 0,
-        total: 0,
-        gratuitosSelecionados: 0
-    };
-
-    // Função para mudar de tela
-    function irParaTela(id) {
-        document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-        document.getElementById(id).style.display = 'flex';
-        window.scrollTo(0, 0);
-    }
-
-    // Iniciar pedido e salvar nome
-    function confirmarNome() {
-        const nome = document.getElementById('input-nome').value;
-        if(nome.trim() === "") { alert("Por favor, digite seu nome"); return; }
-        pedido.cliente = nome;
-        document.getElementById('nome-exibicao').innerText = nome;
-        irParaTela('tela-menu');
-    }
-
-    // Gerenciar Adicionais (Regra: Máximo 3 gratuitos)
-    function alterarAdicional(nome, preco, mudanca) {
-        const spanQtd = document.getElementById('qtd-' + nome);
-        let qtdAtual = parseInt(spanQtd.innerText);
-
-        if (preco === 0) { // Regra para Gratuitos
-            if (mudanca > 0 && pedido.gratuitosSelecionados >= 3) {
-                alert("Limite de 3 adicionais gratuitos atingido!");
-                return;
-            }
-            if (mudanca < 0 && qtdAtual <= 0) return;
-            
-            qtdAtual += mudanca;
-            pedido.gratuitosSelecionados += mudanca;
-        } else { // Regra para Pagos
-            if (mudanca < 0 && qtdAtual <= 0) return;
-            qtdAtual += mudanca;
-            pedido.total += (preco * mudanca);
-        }
-
-        spanQtd.innerText = qtdAtual;
-        atualizarTotalNoDisplay();
-    }
-
-    function atualizarTotalNoDisplay() {
-        const totalFormatado = "R$ " + pedido.total.toFixed(2).replace('.', ',');
-        document.getElementById('display-total').innerText = totalFormatado;
-        document.getElementById('display-total-pagamento').innerText = totalFormatado;
-    }
-
-    // Finalização e Reset (Igual Totem BK)
-    function finalizarPedido() {
-        const msgFinal = `Pedido enviado, ${pedido.cliente}.\nAgradecemos a preferência.\nAguarde até ser chamado.`;
-        document.getElementById('mensagem-agradecimento').innerText = msgFinal;
-        irParaTela('tela-final');
-    }
-
-    function resetarSistema() {
-        pedido = { cliente: "", produto: "", valorBase: 0, total: 0, gratuitosSelecionados: 0 };
-        document.getElementById('input-nome').value = "";
-        // Limpar todos os contadores de tela aqui...
-        irParaTela('tela-inicial');
-    }
-</script>
-    <style>
-    .flags-section {
-        width: 100%;
-        max-width: 900px;
-        background: #333;
-        padding: 20px;
-        border-radius: 15px;
-        margin-bottom: 25px;
-    }
-    .flags-title {
-        color: var(--cor-primaria);
-        font-size: 1.4rem;
-        margin-bottom: 15px;
-        text-transform: uppercase;
-        border-bottom: 1px solid #555;
-        padding-bottom: 10px;
-        text-align: left;
-        width: 100%;
-    }
-    .flags-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        justify-content: center;
-    }
-    .flag-card {
-        width: 100px;
-        height: 60px;
-        background: white;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 5px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    }
-    .flag-card img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-    }
-    .pix-footer-logo {
-        width: 60px;
-        margin-top: 10px;
-    }
-</style>
-
-<div id="screen-card-flags" class="screen">
-    <img src="https://i.postimg.cc/C1nrB0SK/Logo.png" class="logo">
-    
-    <h1 style="margin-bottom: 5px;">Pagamento no Balcão</h1>
-    <p style="margin-bottom: 25px;">Consulte as bandeiras aceitas abaixo:</p>
-
-    <div class="flags-section">
-        <div class="flags-title">Cartões Débito e Crédito</div>
-        <div class="flags-grid">
-            <div class="flag-card"><img src="https://i.postimg.cc/0ywNfWx7/MasterCard.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/0ywNfWxc/Visa.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/GpnmSFhX/ELO.jpg"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/htdGrygy/American_express.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/dVy0BHvn/Hiper.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/XYCv8H3R/Hipercard.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/vmwZSrHX/Banri_Compras.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/HkyL2ZHf/Cabal.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/BnKvgYsm/Diners_Club.png"></div>
-        </div>
-    </div>
-
-    <div class="flags-section">
-        <div class="flags-title">Cartões Alimentação:</div>
-        <div class="flags-grid">
-            <div class="flag-card"><img src="https://i.postimg.cc/MGJpr7pv/Ben.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/QMZdnQxv/Pluxee.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/s2Cg0YgV/Ticket.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/d0cVS2Vs/Up.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/Dz3wYrw7/VR.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/JhCzdNz7/GreenCard.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/hGRt3Ltq/Alelo.png"></div>
-        </div>
-    </div>
-
-    <div class="flags-section">
-        <div class="flags-title">Carteiras Digitais:</div>
-        <div class="flags-grid">
-            <div class="flag-card"><img src="https://i.postimg.cc/k5Ngr22g/AME.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/tgd40ssn/Banco_inter.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/0NGygzzM/Banco_original.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/Xv6YDfYX/Nubank.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/1z03x88s/Mercado_Pago.png"></div>
-            <div class="flag-card"><img src="https://i.postimg.cc/VN9kyJJ1/PicPay.png"></div>
-        </div>
-    </div>
-
-    <button class="btn-main" onclick="finishOrder()">ENTENDIDO / FINALIZAR</button>
-
-</div>
-
-<script>
-    // Atualiza a função de pagamento para abrir a nova tela de bandeiras
-    function payMethod(type) {
-        if(type === 'pix') showScreen('screen-pix');
-        if(type === 'money') showScreen('screen-money');
-        if(type === 'card') showScreen('screen-card-flags'); // Direciona para a nova tela
-    }
-</script>
-<script>
-/**
- * THE KINGS - VERSÃO FINAL COM BOTÃO NO TOPO
- */
-(function() {
-    // 1. CSS PARA O BOTÃO NO TOPO E GRIDS
-    const estilo = document.createElement('style');
-    estilo.innerHTML = `
-        .flags-section { width: 95%; background: #333; padding: 10px; border-radius: 10px; margin-bottom: 10px; }
-        .flags-title { color: var(--cor-primaria); font-size: 1rem; margin-bottom: 8px; text-transform: uppercase; border-bottom: 1px solid #555; padding-bottom: 5px; }
-        .flags-grid { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
-        .flag-card { width: 65px; height: 40px; background: white; border-radius: 5px; display: flex; align-items: center; justify-content: center; padding: 2px; }
-        .flag-card img { max-width: 90%; max-height: 90%; object-fit: contain; }
-        
-        /* BOTÃO DE FINALIZAR ESTILO BK (NO TOPO) */
-        .btn-finalizar-topo { 
-            background-color: #28a745 !important; 
-            color: white !important; 
-            width: 100%; 
-            max-width: 450px; 
-            padding: 20px !important;
-            font-size: 1.4rem !important;
-            font-weight: bold !important;
-            border-radius: 12px !important;
-            margin: 15px 0 !important;
-            box-shadow: 0px 4px 0px #1e7e34 !important;
-            text-transform: uppercase;
-        }
-
-        .btn-pix-logo { width: 45px; margin-bottom: 5px; }
-    `;
-    document.head.appendChild(estilo);
-
-    // 2. Colocar Logo no Botão Pix da tela de seleção de pagamento
-    const botoesPagamento = document.querySelectorAll('.btn-pay');
-    botoesPagamento.forEach(btn => {
-        if (btn.innerText.includes('Pix')) {
-            btn.innerHTML = `<img src="https://i.postimg.cc/rp2wY1F3/Pix.png" class="btn-pix-logo"><br>Pix`;
-            btn.style.display = "flex";
-            btn.style.flexDirection = "column";
-            btn.style.alignItems = "center";
-        }
-    });
-
-    // 3. Montar a tela de cartões com o BOTÃO NO TOPO
-    const telaCartao = document.getElementById('screen-card');
-    if (telaCartao) {
-        telaCartao.innerHTML = `
-            <img src="https://i.postimg.cc/C1nrB0SK/Logo.png" class="logo" style="width:100px;">
-            <h1 style="margin: 5px 0;">Cartões que aceitamos</h1>
-            
-            <button class="btn-finalizar-topo" onclick="finishOrder()">
-                FINALIZAR E PAGAR NO BALCÃO
-            </button>
-
-            <p style="color: #ccc; margin-bottom: 15px;">Confira as bandeiras aceitas abaixo:</p>
-
-            <div class="flags-section">
-                <div class="flags-title">Cartões Débito e Crédito</div>
-                <div class="flags-grid">
-                    <div class="flag-card"><img src="https://i.postimg.cc/0ywNfWx7/MasterCard.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/0ywNfWxc/Visa.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/GpnmSFhX/ELO.jpg"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/htdGrygy/American_express.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/dVy0BHvn/Hiper.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/XYCv8H3R/Hipercard.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/vmwZSrHX/Banri_Compras.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/HkyL2ZHf/Cabal.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/BnKvgYsm/Diners_Club.png"></div>
-                </div>
-            </div>
-
-            <div class="flags-section">
-                <div class="flags-title">Cartões Alimentação</div>
-                <div class="flags-grid">
-                    <div class="flag-card"><img src="https://i.postimg.cc/MGJpr7pv/Ben.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/QMZdnQxv/Pluxee.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/s2Cg0YgV/Ticket.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/d0cVS2Vs/Up.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/Dz3wYrw7/VR.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/JhCzdNz7/GreenCard.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/hGRt3Ltq/Alelo.png"></div>
-                </div>
-            </div>
-
-            <div class="flags-section">
-                <div class="flags-title">Carteiras Digitais</div>
-                <div class="flags-grid">
-                    <div class="flag-card"><img src="https://i.postimg.cc/k5Ngr22g/AME.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/tgd40ssn/Banco_inter.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/0NGygzzM/Banco_original.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/Xv6YDfYX/Nubank.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/1z03x88s/Mercado_Pago.png"></div>
-                    <div class="flag-card"><img src="https://i.postimg.cc/VN9kyJJ1/PicPay.png"></div>
-                </div>
-            </div>
-            
-            <div style="height: 40px;"></div>
-        `;
-    }
-})();
-</script>
 </body>
 </html>
